@@ -17,7 +17,7 @@ public class StartInterfaceActivity extends AppCompatActivity {
         new android.os.Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                Intent loginIntent = new Intent(StartInterfaceActivity.this, MainActivity.class);
+                Intent loginIntent = new Intent(StartInterfaceActivity.this, LoginActivity.class);
                 StartInterfaceActivity.this.startActivity(loginIntent);
                 StartInterfaceActivity.this.finish();
             }
