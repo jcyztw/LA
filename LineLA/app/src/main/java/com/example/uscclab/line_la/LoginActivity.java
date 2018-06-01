@@ -41,7 +41,6 @@ public class LoginActivity extends AppCompatActivity {
         btn_exit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 Intent goMain = new Intent(LoginActivity.this, MainActivity.class);
                 startActivity(goMain);
 //                Intent homeIntent = new Intent(Intent.ACTION_MAIN);
@@ -118,6 +117,11 @@ public class LoginActivity extends AppCompatActivity {
                 Log.d("####", "Scanned");
                 Toast.makeText(this, "掃描結果: " + result.getContents(), Toast.LENGTH_LONG ).show();   // 顯示條碼
 
+
+                Intent loginIntent = new Intent(LoginActivity.this, ConfirmLoginActivity.class);
+                LoginActivity.this.startActivity(loginIntent);
+                LoginActivity.this.finish();
+                /* // 判斷式先註解 先測試掃描到後跳轉頁面
                 if (this.getIntent().getDataString() != null) {
                     //this.getIntent().getDataString() : usccbarcodescanner://?callurl=http://mmm.lifeacademy.org/erpweb/testbarcodeapp&returnurl=http://mmm.lifeacademy.org/erpweb/Scancode/PutScanCode?username=
 
@@ -128,6 +132,7 @@ public class LoginActivity extends AppCompatActivity {
                     Toast.makeText(this, "請從網頁開啟本程式", Toast.LENGTH_LONG).show();
                     this.finish();
                 }
+                */
             }
         } else {
             // This is important, otherwise the result will not be passed to the fragment
