@@ -22,6 +22,13 @@ allprojects {
     }
 }
 
+//ext {
+//    // The following are only a few examples of the types of properties you can define.
+//    compileSdkVersion = 26
+//    // You can also use this to specify versions for dependencies. Having consistent
+//    // versions between modules can avoid behavior conflicts.
+//    supportLibVersion = "27.1.1"
+//}
 task clean(type: Delete) {
     delete rootProject.buildDir
 }

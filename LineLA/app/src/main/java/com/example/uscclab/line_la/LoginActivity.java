@@ -41,10 +41,13 @@ public class LoginActivity extends AppCompatActivity {
         btn_exit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent homeIntent = new Intent(Intent.ACTION_MAIN);
-                homeIntent.addCategory( Intent.CATEGORY_HOME );
-                homeIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                startActivity(homeIntent);
+
+                Intent goMain = new Intent(LoginActivity.this, MainActivity.class);
+                startActivity(goMain);
+//                Intent homeIntent = new Intent(Intent.ACTION_MAIN);
+//                homeIntent.addCategory( Intent.CATEGORY_HOME );
+//                homeIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+//                startActivity(homeIntent);
             }
         });
     }
@@ -111,7 +114,6 @@ public class LoginActivity extends AppCompatActivity {
         if(result != null) {
             if(result.getContents() == null) {
                 Log.d("####", "Cancelled scan");
-                this.finish();
             } else {
                 Log.d("####", "Scanned");
                 Toast.makeText(this, "掃描結果: " + result.getContents(), Toast.LENGTH_LONG ).show();   // 顯示條碼
@@ -131,5 +133,8 @@ public class LoginActivity extends AppCompatActivity {
             // This is important, otherwise the result will not be passed to the fragment
             super.onActivityResult(requestCode, resultCode, data);
         }
+    }
+    public void onCLick(View v){
+
     }
 }
