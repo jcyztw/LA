@@ -21,6 +21,6 @@ public class StartInterfaceActivity extends AppCompatActivity {
                 StartInterfaceActivity.this.startActivity(loginIntent);
                 StartInterfaceActivity.this.finish();
             }
-        }, 1500);
+        }, 500);
     }
 }

@@ -41,12 +41,9 @@ public class LoginActivity extends AppCompatActivity {
         btn_exit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+//                finish();
                 Intent goMain = new Intent(LoginActivity.this, MainActivity.class);
                 startActivity(goMain);
-//                Intent homeIntent = new Intent(Intent.ACTION_MAIN);
-//                homeIntent.addCategory( Intent.CATEGORY_HOME );
-//                homeIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-//                startActivity(homeIntent);
             }
         });
     }
@@ -118,8 +115,11 @@ public class LoginActivity extends AppCompatActivity {
                 Toast.makeText(this, "掃描結果: " + result.getContents(), Toast.LENGTH_LONG ).show();   // 顯示條碼
 
 
-                Intent loginIntent = new Intent(LoginActivity.this, ConfirmLoginActivity.class);
-                LoginActivity.this.startActivity(loginIntent);
+
+
+                Intent goConfirmLogin = new Intent(LoginActivity.this, ConfirmLoginActivity.class);
+                goConfirmLogin.putExtra("memberID", result.getContents());
+                LoginActivity.this.startActivity(goConfirmLogin);
                 LoginActivity.this.finish();
                 /* // 判斷式先註解 先測試掃描到後跳轉頁面
                 if (this.getIntent().getDataString() != null) {
