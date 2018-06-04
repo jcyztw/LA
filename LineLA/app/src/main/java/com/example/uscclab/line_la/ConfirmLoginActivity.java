@@ -21,6 +21,7 @@ import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 public class ConfirmLoginActivity extends AppCompatActivity {
 
@@ -29,6 +30,14 @@ public class ConfirmLoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_confirm_login);
         ImageView Img1 = (ImageView) findViewById(R.id.img_profile);
+
+        Intent intentFromLogin = getIntent();
+        String memberID = "學員卡號 : " + intentFromLogin.getStringExtra("memberID");
+
+        TextView tv_memberID = (TextView) findViewById(R.id.tv_memberID);
+        TextView tv_name = (TextView) findViewById(R.id.tv_name);
+
+        tv_memberID.setText(memberID);
         // 取得螢幕解析度
         DisplayMetrics dm = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(dm);
