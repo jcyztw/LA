@@ -21,10 +21,7 @@
             android:layout_marginTop="30dp"/>
 
         <TextView
-<<<<<<< HEAD
             android:id="@+id/tv_memberID"
-=======
->>>>>>> ebc0133fc210a8e4007fb0763f3c9bc33122faeb
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="30dp"
@@ -34,6 +31,7 @@
             android:textSize="14sp" />
 
         <TextView
+            android:id="@+id/tv_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="30dp"

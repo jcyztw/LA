@@ -14,7 +14,7 @@
         android:background="#435a75"
         app:titleTextColor="#ffffff"
         app:layout_scrollFlags="scroll|enterAlways"
-        app:popupTheme="@style/AppTheme.NoActionBar.PopupOverlay"
+        app:popupTheme="@style/AppTheme.PopupOverlay"
         app:title="who"/>
 
     <ListView
