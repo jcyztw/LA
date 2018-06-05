@@ -40,6 +40,12 @@
             android:text="離開"
             android:textColor="#b3cad6"
             android:textSize="24sp" />
+
+        <Button
+            android:id="@+id/btn_test"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Button" />
     </LinearLayout>
 
 </android.support.constraint.ConstraintLayout>
