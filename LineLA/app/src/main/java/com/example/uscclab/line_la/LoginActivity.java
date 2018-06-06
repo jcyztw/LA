@@ -50,7 +50,10 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 //                finish();
+
+                //? for test
                 Intent goMain = new Intent(LoginActivity.this, MainActivity.class);
+                goMain.putExtra("memberID", "100737000837");
                 startActivity(goMain);
             }
         });
