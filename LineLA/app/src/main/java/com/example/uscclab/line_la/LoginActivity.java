@@ -53,7 +53,7 @@ public class LoginActivity extends AppCompatActivity {
 
                 //? for test
                 Intent goMain = new Intent(LoginActivity.this, MainActivity.class);
-                goMain.putExtra("memberID", "100737000837");
+                goMain.putExtra("memberID", "100737000836");
                 startActivity(goMain);
             }
         });

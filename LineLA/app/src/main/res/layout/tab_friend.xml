@@ -41,6 +41,9 @@
         android:layout_gravity="top"
         android:layout_margin="5dp"
         android:layout_weight="8"
+        android:divider="#96dcdcdc"
+        android:dividerHeight="0.1dp"
+        android:childDivider="@color/zxing_transparent"
         android:scrollIndicators="none"
         tools:layout_editor_absoluteX="0dp"
         tools:layout_editor_absoluteY="250dp">

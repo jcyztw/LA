@@ -1,12 +1,23 @@
 package com.example.uscclab.line_la;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.res.Resources;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
 import android.graphics.Typeface;
+import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
+import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
+import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -89,9 +100,16 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
             view=inflater.inflate(R.layout.list_item,null);
         }
         TextView txtlistChild = (TextView)view.findViewById(R.id.txvItem);
-        txtlistChild.setText(roomInfo.getRoomName());
+        txtlistChild.setText(roomInfo.getName());
         ImageView imageChild = (ImageView)view.findViewById(R.id.imvItem);
-        imageChild.setImageBitmap(roomInfo.getIcon());
+
+        LinearLayout lyItem = view.findViewById(R.id.lyItem);
+        
+
+        DisplayMetrics dm = new DisplayMetrics();
+
+        circleImageView(imageChild, roomInfo.getIcon());
+        // imageChild.setImageBitmap(roomInfo.getIcon());
         return view;
 
     }
@@ -99,5 +117,18 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
     @Override
     public boolean isChildSelectable(int i, int j) {
         return true;
+    }
+
+    public void circleImageView(ImageView imageView, Bitmap srcBitmap){
+
+        Resources mResources = context.getResources();
+
+        // 將圖片切圓角
+        RoundedBitmapDrawable roundedBitmapDrawable = RoundedBitmapDrawableFactory.create(mResources, srcBitmap);
+        roundedBitmapDrawable.setCircular(true);
+
+        // 將轉好的圖貼在imageView中
+        imageView.setImageDrawable(roundedBitmapDrawable);
+
     }
 }

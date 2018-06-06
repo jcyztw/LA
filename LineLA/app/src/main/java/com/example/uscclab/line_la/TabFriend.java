@@ -60,7 +60,7 @@ public class TabFriend extends Fragment {
     private List<String> listDataHeader;            //? the title of expandableList
     private HashMap<String,ArrayList<RoomInfo>> listHash;
 
-    //private String addFriendID;
+    // list content
     private ArrayList<RoomInfo> groupTA;
     private ArrayList<RoomInfo> groupTB;
     private ArrayList<RoomInfo> groupTC;
@@ -76,7 +76,7 @@ public class TabFriend extends Fragment {
 
         imvAvatar = rootView.findViewById(R.id.imvAvatarMain);
         txvName = rootView.findViewById(R.id.txvNameMain);
-        getMemberProfile();
+
 
         // =====for expandablist=====
         initData();
@@ -117,8 +117,11 @@ public class TabFriend extends Fragment {
             }
         });
 
-
         //=/ =====for expandablist=====
+
+        getProfile();
+        getRelation();
+
         return rootView;
     }
 
@@ -143,9 +146,9 @@ public class TabFriend extends Fragment {
     }
     //=/ =====for expandablist=====
 
-    private void getMemberProfile(){
+    private void getProfile(){
 
-        class GetData extends AsyncTask<String,Void,MemberProfile> {
+        class GetData extends AsyncTask<String,Void,ItemData> {
 
             ProgressDialog loading;
             @Override
@@ -154,7 +157,7 @@ public class TabFriend extends Fragment {
                 loading = ProgressDialog.show( getActivity(), "Gain Data", "Please wait...", true, true);
             }
             @Override
-            protected void onPostExecute(MemberProfile profile) {
+            protected void onPostExecute(ItemData profile) {
                 super.onPostExecute(profile);
 
                 loading.dismiss();
@@ -163,33 +166,41 @@ public class TabFriend extends Fragment {
                 getActivity().getWindowManager().getDefaultDisplay().getMetrics(dm);
                 imvAvatar.setImageBitmap( getRoundedCornerBitmap(
                         profile.avatar,dm.widthPixels/2.0f,dm));
-                //imvAvatar.setImageBitmap(profile.avatar);
                 txvName.setText( profile.memberName);
             }
 
             @Override
-            protected MemberProfile doInBackground(String...params) {
-                String address = "http://140.116.82.39/communicate/GetUserProfile.php?memberID=" + params[0];
+            protected ItemData doInBackground(String...params) {
+                String addr_profile = "http://140.116.82.39/communicate/GetUserProfile.php?memberID=" + params[0];
 
-                String jsonString = null;
-                Bitmap image = null;
+                String jsonStrProfile = null;
 
-                MemberProfile profile = new MemberProfile();
+                ItemData profile = new ItemData();
+
+                URL url;
+                InputStream inputStream;
+                BufferedReader bufferedReader;
+                StringBuilder builder;
 
                 String[] result;
                 result = new String[2];
-                try {
-                    URL url = new URL(address);
-                    InputStream inputStream = url.openConnection().getInputStream();
+                String line = null;
 
-                    BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream,"utf8"));
-                    StringBuilder builder = new StringBuilder();
-                    String line = null;
+
+                try {
+
+                    // ======= get userProfile ========
+                    url = new URL(addr_profile);
+                    inputStream = url.openConnection().getInputStream();
+
+                    bufferedReader = new BufferedReader(new InputStreamReader(inputStream,"utf8"));
+                    builder = new StringBuilder();
+
                     while((line = bufferedReader.readLine()) != null) {
                         builder.append(line + "\n");
                     }
                     inputStream.close();
-                    jsonString = builder.toString();
+                    jsonStrProfile = builder.toString();
 
                 } catch (MalformedURLException e) {
                     e.printStackTrace();
@@ -197,12 +208,13 @@ public class TabFriend extends Fragment {
                     e.printStackTrace();
                 }
 
-                // DecodeJson from server
+                // convert data
                 try {
-                    JSONObject jsonobj = new JSONObject(jsonString);
+                    JSONObject jsonobj = new JSONObject(jsonStrProfile);
                     //JSONArray jsonArray = new JSONArray(input);
                     result[0] = jsonobj.getString("name");
                     result[1] = jsonobj.getString("avatar");
+
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -211,10 +223,109 @@ public class TabFriend extends Fragment {
                 profile.memberName = result[0];
 
                 byte [] byteAvatar = Base64.decode(result[1],Base64.DEFAULT);
-                image = BitmapFactory.decodeByteArray(byteAvatar, 0, byteAvatar.length);
-                profile.avatar = image;
+
+                profile.avatar = BitmapFactory.decodeByteArray(byteAvatar, 0, byteAvatar.length);
                 
                 return profile;
+            }
+        }
+
+        String memberID = getActivity().getIntent().getStringExtra("memberID");
+        GetData getdata = new GetData();
+        getdata.execute(memberID);
+    }
+
+    private void getRelation(){
+
+        class GetData extends AsyncTask<String,Void, Void> {
+
+            ProgressDialog loading;
+            @Override
+            protected void onPreExecute() {
+                super.onPreExecute();
+                loading = ProgressDialog.show( getActivity(), "Gain Data", "Please wait...", true, true);
+            }
+            @Override
+            protected void onPostExecute(Void tmp) {
+                super.onPostExecute(tmp);
+                loading.dismiss();
+
+                listHash.put(listDataHeader.get(0),groupTA);
+                listHash.put(listDataHeader.get(1),groupTB);
+                listHash.put(listDataHeader.get(2),groupTC);
+            }
+
+            @Override
+            protected Void doInBackground(String...params) {
+
+                String addr_relation = "http://140.116.82.39/communicate/GetRelationData.php?memberID=" + params[0];
+
+                String jsonStrRelation = null;
+                String line = null;
+                String type = new String();
+
+
+                URL url;
+                InputStream inputStream;
+                BufferedReader bufferedReader;
+                StringBuilder builder;
+
+
+                // get Data From server
+                try {
+
+                    url = new URL(addr_relation);
+                    inputStream = url.openConnection().getInputStream();
+
+                    bufferedReader = new BufferedReader(new InputStreamReader(inputStream, "utf8"));
+                    builder = new StringBuilder();
+
+                    while ((line = bufferedReader.readLine()) != null) {
+                        builder.append(line + "\n");
+                    }
+                    inputStream.close();
+                    jsonStrRelation = builder.toString();
+
+                } catch (MalformedURLException e) {
+                    e.printStackTrace();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+                // 1. convert data 2. set list data
+                try {
+                    JSONArray jsonArray = new JSONArray(jsonStrRelation);
+                    for (int i = 0; i < jsonArray.length(); ++i) {
+
+                        JSONObject jsonData = jsonArray.getJSONObject(i);
+
+
+                        byte[] byteAvatar = Base64.decode(jsonData.getString("avatar"), Base64.DEFAULT);
+
+                        RoomInfo item = new RoomInfo();
+
+                        item.setIcon(BitmapFactory.decodeByteArray(byteAvatar, 0, byteAvatar.length));
+                        item.setName(jsonData.getString("name"));
+                        type = jsonData.getString("type");
+
+                        switch (type) {
+                            case "0":
+                                groupTA.add(item);
+                                break;
+                            case "1":
+                                groupTB.add(item);
+                                break;
+                            case "2":
+                                groupTC.add(item);
+                                break;
+                            default:
+                                break;
+                        }
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                return null;
             }
         }
 
@@ -255,7 +366,7 @@ public class TabFriend extends Fragment {
         canvas.drawBitmap(bitmap1, 0, 0, paint);
         return output;
     }
-    class MemberProfile{
+    class ItemData{
         Bitmap avatar;
         String memberName;
     }

@@ -10,6 +10,7 @@ import java.util.ArrayList;
  */
 
 public class RoomInfo implements Serializable {
+
     private String roomName;
     private String Name;
     private String StudentID;
@@ -62,6 +63,7 @@ public class RoomInfo implements Serializable {
     public Bitmap getIcon() {
         return icon;
     }
+
 
     public void setIcon(Bitmap icon) {
         this.icon = icon;

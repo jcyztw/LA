@@ -5,14 +5,15 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    tools:ignore="NestedWeights"
     tools:context="com.example.uscclab.line_la.ChatroomActivity">
 
     <TextView
         android:id="@+id/tv_chatroomname"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="10dp"
         android:background="#435a75"
+        android:padding="10dp"
         android:text="who"
         android:textAlignment="viewStart"
         android:textColor="#ffffff"
