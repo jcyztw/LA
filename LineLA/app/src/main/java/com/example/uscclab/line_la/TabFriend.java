@@ -1,6 +1,7 @@
 package com.example.uscclab.line_la;
 
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -21,6 +22,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ExpandableListView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -37,6 +39,9 @@ import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
 /**
  * Created by Yolo on 2018/6/3.
@@ -48,6 +53,22 @@ public class TabFriend extends Fragment {
     ImageView imvAvatar;
     TextView txvName;
 
+
+    // =====for expandablist=====
+    private ExpandableListView expLsvPeople;
+    private ExpandableListAdapter listAdapter;      //? the content of expandableList
+    private List<String> listDataHeader;            //? the title of expandableList
+    private HashMap<String,ArrayList<RoomInfo>> listHash;
+
+    //private String addFriendID;
+    private ArrayList<RoomInfo> groupTA;
+    private ArrayList<RoomInfo> groupTB;
+    private ArrayList<RoomInfo> groupTC;
+    private ArrayList<RoomInfo> friend;
+    private String userID;
+
+    //=/ =====for expandablist=====
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -57,8 +78,70 @@ public class TabFriend extends Fragment {
         txvName = rootView.findViewById(R.id.txvNameMain);
         getMemberProfile();
 
+        // =====for expandablist=====
+        initData();
+        expLsvPeople = rootView.findViewById(R.id.expanListviewPeople);
+        listAdapter = new ExpandableListAdapter(getActivity(),listDataHeader,listHash);
+
+
+        expLsvPeople.setAdapter(listAdapter);
+        expLsvPeople.setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
+            @Override
+            public boolean onChildClick(ExpandableListView parent, View v, int groupPosition, int childPosition, long id) {
+                int group_class = groupPosition;
+//                if(group_class == 1){
+//                    //Log.d("Tag","好友click");
+//                    RoomInfo tmp = (RoomInfo)listAdapter.getChild(groupPosition,childPosition);
+//                    String friendID = tmp.getStudentID();
+//                    String chatName = tmp.getName();
+//
+//                    Intent chat = new Intent(Main.this,Chatroom.class);
+//                    chat.putExtra("id",userID);
+//                    chat.putExtra("friend_id",friendID);
+//                    chat.putExtra("chatName", chatName);
+//                    startActivity(chat);
+//
+//                } else if(group_class == 0) {
+//                    groupPosition=1;
+//                    RoomInfo tmp = (RoomInfo)listAdapter.getChild(groupPosition,childPosition);
+//                    String chatName = "aaa";
+//                    String roomID = tmp.getStudentID();
+//
+//                    Intent chat = new Intent(Main.this,Chatroom.class);
+//                    chat.putExtra("id",userID);
+//                    chat.putExtra("friend_id",roomID);
+//                    chat.putExtra("chatName", chatName);
+//                    startActivity(chat);
+//                }
+                return false;
+            }
+        });
+
+
+        //=/ =====for expandablist=====
         return rootView;
     }
+
+    // =====for expandablist=====
+    private void initData(){
+        listDataHeader = new ArrayList<>();
+        listHash = new HashMap<>();
+        listDataHeader.add("群組 : type A");
+        listDataHeader.add("群組 : type B");
+        listDataHeader.add("群組 : type C");
+        listDataHeader.add("好友");
+
+        groupTA = new ArrayList<>();
+        groupTB = new ArrayList<>();
+        groupTC = new ArrayList<>();
+        friend = new ArrayList<>();
+
+        listHash.put(listDataHeader.get(0),groupTA);
+        listHash.put(listDataHeader.get(1),groupTB);
+        listHash.put(listDataHeader.get(2),groupTC);
+        listHash.put(listDataHeader.get(3),friend);
+    }
+    //=/ =====for expandablist=====
 
     private void getMemberProfile(){
 
@@ -114,9 +197,18 @@ public class TabFriend extends Fragment {
                     e.printStackTrace();
                 }
 
-                result = DecodeJSON(jsonString);
-                profile.memberName = result[0];
+                // DecodeJson from server
+                try {
+                    JSONObject jsonobj = new JSONObject(jsonString);
+                    //JSONArray jsonArray = new JSONArray(input);
+                    result[0] = jsonobj.getString("name");
+                    result[1] = jsonobj.getString("avatar");
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
 
+
+                profile.memberName = result[0];
 
                 byte [] byteAvatar = Base64.decode(result[1],Base64.DEFAULT);
                 image = BitmapFactory.decodeByteArray(byteAvatar, 0, byteAvatar.length);
@@ -129,25 +221,6 @@ public class TabFriend extends Fragment {
         String memberID = getActivity().getIntent().getStringExtra("memberID");
         GetData getdata = new GetData();
         getdata.execute(memberID);
-    }
-    private final String[] DecodeJSON(String input) {
-        String[] info = new String[2];
-        try {
-
-            Log.i("####input", input);
-            JSONObject jsonobj = new JSONObject(input);
-            //JSONArray jsonArray = new JSONArray(input);
-            info[0] = jsonobj.getString("name");
-            info[1] = jsonobj.getString("avatar");
-//            for(int i = 0; i < jsonArray.length(); ++i) {
-//                JSONObject jsonData = jsonArray.getJSONObject(i);
-//                info[0] = jsonData.getString("name");
-//                info[1] = jsonData.getString("avatar");
-//            }
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        return info;
     }
     public static Bitmap getRoundedCornerBitmap(Bitmap bitmap, float roundPx,DisplayMetrics dm)
     {

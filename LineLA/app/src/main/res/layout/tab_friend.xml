@@ -35,10 +35,13 @@
     </LinearLayout>
 
     <ExpandableListView
-        android:id="@+id/expanListview_friend"
+        android:id="@+id/expanListviewPeople"
         android:layout_width="match_parent"
         android:layout_height="0dp"
+        android:layout_gravity="top"
+        android:layout_margin="5dp"
         android:layout_weight="8"
+        android:scrollIndicators="none"
         tools:layout_editor_absoluteX="0dp"
         tools:layout_editor_absoluteY="250dp">
 
