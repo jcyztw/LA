@@ -104,7 +104,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
         ImageView imageChild = (ImageView)view.findViewById(R.id.imvItem);
 
         LinearLayout lyItem = view.findViewById(R.id.lyItem);
-        
+
 
         DisplayMetrics dm = new DisplayMetrics();
 

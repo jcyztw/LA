@@ -122,6 +122,8 @@ public class TabFriend extends Fragment {
         getProfile();
         getRelation();
 
+
+
         return rootView;
     }
 
@@ -253,6 +255,9 @@ public class TabFriend extends Fragment {
                 listHash.put(listDataHeader.get(0),groupTA);
                 listHash.put(listDataHeader.get(1),groupTB);
                 listHash.put(listDataHeader.get(2),groupTC);
+
+                updateExpandableList();
+
             }
 
             @Override
@@ -365,6 +370,13 @@ public class TabFriend extends Fragment {
         paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC_IN));
         canvas.drawBitmap(bitmap1, 0, 0, paint);
         return output;
+    }
+
+    private void updateExpandableList(){
+        for(int i=0; i<4; i++){
+            expLsvPeople.collapseGroup(i);
+            expLsvPeople.expandGroup(i);
+        }
     }
     class ItemData{
         Bitmap avatar;
