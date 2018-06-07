@@ -38,9 +38,11 @@
             android:name=".MainActivity"
             android:label="@string/title_activity_main"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".ChatroomActivity"></activity>
-        <service android:name="org.eclipse.paho.android.service.MqttService" >
-        </service>
+        <activity android:name=".ChatroomActivity" />
+
+        <service android:name="org.eclipse.paho.android.service.MqttService"></service>
+
+        <activity android:name=".AddFriend"></activity>
     </application>
 
 </manifest>

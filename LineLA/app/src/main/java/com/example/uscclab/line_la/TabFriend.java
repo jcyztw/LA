@@ -278,7 +278,6 @@ public class TabFriend extends Fragment {
 
                 // get Data From server
                 try {
-
                     url = new URL(addr_relation);
                     inputStream = url.openConnection().getInputStream();
 
