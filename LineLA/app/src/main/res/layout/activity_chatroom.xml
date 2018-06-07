@@ -2,66 +2,112 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/ll_chatroom"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="com.example.uscclab.line_la.ChatroomActivity">
+    tools:context="com.example.uscclab.line_la.ChatroomActivity" >
+
+    <!--<ScrollView-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content">-->
 
     <TextView
         android:id="@+id/tv_chatroomname"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="10dp"
-        android:background="#435a75"
         android:text="who"
-        android:textAlignment="viewStart"
-        android:textColor="#ffffff"
         android:textSize="24dp"
-        android:textStyle="bold" />
+        android:background="#435a75"
+        android:textColor="#ffffff"
+        android:textStyle="bold"
+        android:gravity="bottom"/>
+
+
+    <!--<android.support.v7.widget.Toolbar-->
+        <!--android:id="@+id/toolbarTitle"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:background="#435a75"-->
+        <!--android:padding="1dp"-->
+        <!--android:fitsSystemWindows="true"-->
+        <!--app:title="who"-->
+        <!--app:titleTextColor="#FFFFFF"/>-->
+
+    <!--</ScrollView>-->
 
     <ListView
         android:id="@+id/lv_chat"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="8.5"
-        android:background="@drawable/bg_chatroom"
-        android:scrollbars="vertical"
+        android:layout_weight="9"
+        android:cacheColorHint="#00000000"
         android:divider="@color/zxing_transparent"
-        android:padding="10dp"/>
+        android:padding="10dp"
+        android:scrollbars="vertical" />
 
-    <!--ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"-->
+    <!--<ScrollView-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="0dp"-->
+        <!--android:layout_weight="0.9">-->
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="#d3dae4">
+        <!--<LinearLayout-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="match_parent"-->
+            <!--android:background="#d3dae4"-->
+            <!--android:orientation="vertical">-->
+            <!--<ListView-->
+                <!--android:id="@+id/lv_chat"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:background="@drawable/bg_chatroom"-->
+                <!--android:divider="@color/zxing_transparent"-->
+                <!--android:padding="10dp"-->
+                <!--android:scrollbars="vertical" />-->
+        <!--</LinearLayout>-->
+    <!--</ScrollView>-->
 
-            <EditText
-                android:id="@+id/et_msg"
-                android:layout_width="0dp"
+            <LinearLayout
+                android:id="@+id/ll_chatroom_input"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="5dp"
-                android:layout_marginLeft="3dp"
-                android:layout_marginRight="3dp"
-                android:layout_marginTop="5dp"
-                android:layout_weight="8"
-                android:background="#ffffff"
-                android:textSize="25dp" />
+                android:background="#d3dae4"
+                android:gravity="bottom"
+                android:orientation="horizontal"
+                android:fitsSystemWindows="true">
 
-            <ImageButton
-                android:id="@+id/btn_send"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="5dp"
-                android:layout_marginLeft="0dp"
-                android:layout_marginRight="3dp"
-                android:layout_marginTop="5dp"
-                android:layout_weight="1.5"
-                android:background="#9af2c0"
-                app:srcCompat="@android:drawable/ic_media_play" />
-        </LinearLayout>
-    <!--/ScrollView-->
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight=".9"
+                    android:gravity="center_horizontal">
 
+                    <EditText
+                        android:id="@+id/et_msg"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="5dp"
+                        android:layout_marginLeft="3dp"
+                        android:layout_marginRight="3dp"
+                        android:layout_marginTop="5dp"
+                        android:background="#ffffff"
+                        android:maxLines="4"
+                        android:text=""
+                        android:textSize="23dp"/>
+
+                </LinearLayout>
+
+                <ImageButton
+                    android:id="@+id/btn_send"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="5dp"
+                    android:layout_marginRight="3dp"
+                    android:layout_marginTop="5dp"
+                    android:layout_weight=".1"
+                    android:background="#9af2c0"
+                    app:srcCompat="@android:drawable/ic_media_play" />
+
+            </LinearLayout>
 </LinearLayout>
