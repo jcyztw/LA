@@ -7,8 +7,11 @@ import android.support.v7.widget.Toolbar;
 import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
 import android.view.View;
+<<<<<<< HEAD
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
+=======
+>>>>>>> d5c6224f325303e89a4478115c05a2f28e89712b
 import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.FrameLayout;
@@ -55,9 +58,16 @@ public class ChatroomActivity extends AppCompatActivity {
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
         setContentView(R.layout.activity_chatroom);
+<<<<<<< HEAD
         getWindow().setBackgroundDrawableResource(R.drawable.bg_chatroom);
 //        ll_chatroom = (LinearLayout)findViewById(R.id.ll_chatroom);
 //        ll_chatroom.setBackgroundResource(R.drawable.bg_chatroom);
+=======
+
+        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
+        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
+
+>>>>>>> d5c6224f325303e89a4478115c05a2f28e89712b
         // By Intent and the label is chatroomname. The chatroomname is friendname or groupname.
 //        Intent intentFromLogin = getIntent();
 //        String chatroomname = intentFromLogin.getStringExtra("chatroomname");
