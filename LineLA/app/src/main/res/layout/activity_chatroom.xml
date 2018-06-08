@@ -6,12 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-<<<<<<< HEAD
     tools:context="com.example.uscclab.line_la.ChatroomActivity" >
-
-    <!--<ScrollView-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="wrap_content">-->
 
     <TextView
         android:id="@+id/tv_chatroomname"
@@ -25,140 +20,54 @@
         android:textStyle="bold"
         android:gravity="bottom"/>
 
-
-    <!--<android.support.v7.widget.Toolbar-->
-        <!--android:id="@+id/toolbarTitle"-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:background="#435a75"-->
-        <!--android:padding="1dp"-->
-        <!--android:fitsSystemWindows="true"-->
-        <!--app:title="who"-->
-        <!--app:titleTextColor="#FFFFFF"/>-->
-
-    <!--</ScrollView>-->
-=======
-    tools:ignore="NestedWeights"
-    tools:context="com.example.uscclab.line_la.ChatroomActivity">
-
-
-        <TextView
-            android:id="@+id/tv_chatroomname"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="#435a75"
-            android:padding="10dp"
-            android:text="who"
-            android:textAlignment="viewStart"
-            android:textColor="#ffffff"
-            android:textSize="24dp"
-            android:textStyle="bold" />
->>>>>>> d5c6224f325303e89a4478115c05a2f28e89712b
-
     <ListView
         android:id="@+id/lv_chat"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-<<<<<<< HEAD
         android:layout_weight="9"
         android:cacheColorHint="#00000000"
-=======
-        android:layout_weight="12"
-        android:background="@drawable/bg_chatroom"
->>>>>>> d5c6224f325303e89a4478115c05a2f28e89712b
         android:divider="@color/zxing_transparent"
         android:padding="10dp"
         android:scrollbars="vertical" />
 
-    <!--<ScrollView-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="0dp"-->
-        <!--android:layout_weight="0.9">-->
-
-<<<<<<< HEAD
-        <!--<LinearLayout-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="match_parent"-->
-            <!--android:background="#d3dae4"-->
-            <!--android:orientation="vertical">-->
-            <!--<ListView-->
-                <!--android:id="@+id/lv_chat"-->
-                <!--android:layout_width="match_parent"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:background="@drawable/bg_chatroom"-->
-                <!--android:divider="@color/zxing_transparent"-->
-                <!--android:padding="10dp"-->
-                <!--android:scrollbars="vertical" />-->
-        <!--</LinearLayout>-->
-    <!--</ScrollView>-->
-=======
-    <ScrollView
+   <LinearLayout
+        android:id="@+id/ll_chatroom_input"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:background="#d3dae4">
->>>>>>> d5c6224f325303e89a4478115c05a2f28e89712b
+        android:layout_height="wrap_content"
+        android:background="#d3dae4"
+        android:gravity="bottom"
+        android:orientation="horizontal"
+        android:fitsSystemWindows="true">
 
-            <LinearLayout
-                android:id="@+id/ll_chatroom_input"
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight=".9"
+            android:gravity="center_horizontal">
+
+            <EditText
+                android:id="@+id/et_msg"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="#d3dae4"
-                android:gravity="bottom"
-                android:orientation="horizontal"
-                android:fitsSystemWindows="true">
-
-<<<<<<< HEAD
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight=".9"
-                    android:gravity="center_horizontal">
-
-                    <EditText
-                        android:id="@+id/et_msg"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="5dp"
-                        android:layout_marginLeft="3dp"
-                        android:layout_marginRight="3dp"
-                        android:layout_marginTop="5dp"
-                        android:background="#ffffff"
-                        android:maxLines="4"
-                        android:text=""
-                        android:textSize="23dp"/>
-
-                </LinearLayout>
-
-                <ImageButton
-                    android:id="@+id/btn_send"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="5dp"
-                    android:layout_marginRight="3dp"
-                    android:layout_marginTop="5dp"
-                    android:layout_weight=".1"
-                    android:background="#9af2c0"
-                    app:srcCompat="@android:drawable/ic_media_play" />
-=======
-            <ImageButton
-                android:id="@+id/btn_send"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
                 android:layout_marginBottom="5dp"
-                android:layout_marginLeft="0dp"
+                android:layout_marginLeft="3dp"
                 android:layout_marginRight="3dp"
                 android:layout_marginTop="5dp"
-                android:layout_weight="1.5"
-                android:background="#9af2c0"
-                app:srcCompat="@android:drawable/ic_media_play" />
+                android:background="#ffffff"
+                android:maxLines="4"
+                android:text=""
+                android:textSize="23dp"/>
         </LinearLayout>
-    </ScrollView>
-    <!--/ScrollView-->
->>>>>>> d5c6224f325303e89a4478115c05a2f28e89712b
 
-            </LinearLayout>
+        <ImageButton
+            android:id="@+id/btn_send"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="5dp"
+            android:layout_marginRight="3dp"
+            android:layout_marginTop="5dp"
+            android:layout_weight=".1"
+            android:background="#9af2c0"
+            app:srcCompat="@android:drawable/ic_media_play" />
+    </LinearLayout>
 </LinearLayout>

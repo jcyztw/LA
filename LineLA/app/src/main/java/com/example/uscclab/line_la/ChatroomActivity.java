@@ -1,20 +1,11 @@
 package com.example.uscclab.line_la;
-import android.graphics.Rect;
-import android.os.Build;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.Toolbar;
 import android.text.method.ScrollingMovementMethod;
-import android.util.Log;
 import android.view.View;
-<<<<<<< HEAD
 import android.view.ViewGroup;
-import android.view.ViewTreeObserver;
-=======
->>>>>>> d5c6224f325303e89a4478115c05a2f28e89712b
 import android.view.WindowManager;
 import android.widget.EditText;
-import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ListAdapter;
@@ -44,7 +35,6 @@ public class ChatroomActivity extends AppCompatActivity {
     private int type;
     private LinearLayout ll_chatroom;
     private TextView tv_chatroomname;
-//    private Toolbar toolbarTitle;
     private ArrayList<Bubble> bubble = new ArrayList<Bubble>();
     private BubbleList bubblelist;
     private ListView lv_chat;
@@ -58,34 +48,17 @@ public class ChatroomActivity extends AppCompatActivity {
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
         setContentView(R.layout.activity_chatroom);
-<<<<<<< HEAD
+
         getWindow().setBackgroundDrawableResource(R.drawable.bg_chatroom);
-//        ll_chatroom = (LinearLayout)findViewById(R.id.ll_chatroom);
-//        ll_chatroom.setBackgroundResource(R.drawable.bg_chatroom);
-=======
 
-        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
-        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
-
->>>>>>> d5c6224f325303e89a4478115c05a2f28e89712b
         // By Intent and the label is chatroomname. The chatroomname is friendname or groupname.
 //        Intent intentFromLogin = getIntent();
 //        String chatroomname = intentFromLogin.getStringExtra("chatroomname");
         tv_chatroomname = (TextView) findViewById(R.id.tv_chatroomname);
         tv_chatroomname.setText("湯師爺"); // (chatroomname);
 
-//        toolbarTitle = (Toolbar) findViewById(R.id.toolbarTitle);
-//        setSupportActionBar(toolbarTitle);
-//        getSupportActionBar().setTitle("湯師爺");
-
-// ListViewChat
+        // ListViewChat
         lv_chat = (ListView) findViewById(R.id.lv_chat);
-//        lv_chat.bringToFront();
-//        ViewGroup.LayoutParams params = lv_chat.getLayoutParams();
-//        FrameLayout content = (FrameLayout) findViewById(android.R.id.content);
-//        View mChildOfContent = content.getChildAt(0);
-//        params.height = mChildOfContent.getRootView().getHeight() - 200;
-//        lv_chat.setLayoutParams(params);
 
         // et_msg
         et_msg = (EditText) findViewById(R.id.et_msg);
@@ -133,32 +106,6 @@ public class ChatroomActivity extends AppCompatActivity {
 
             }
         });
-    }
-
-    public void setListViewHeightBasedOnChildren(ListView listView) {
-
-        ListAdapter listAdapter = listView.getAdapter();
-
-        if (listAdapter == null) {
-            return;
-        }
-
-        int totalHeight = 0;
-
-        for (int i = 0; i < listAdapter.getCount(); i++) {
-            View listItem = listAdapter.getView(i, null, listView);
-            listItem.measure(0, 0);
-            totalHeight += listItem.getMeasuredHeight();
-        }
-
-        ViewGroup.LayoutParams params = listView.getLayoutParams();
-
-        params.height = totalHeight
-                + (listView.getDividerHeight() * (listAdapter.getCount() - 1));
-
-//        ((ViewGroup.MarginLayoutParams) params).setMargins(10, 10, 10, 10); // 可删除
-
-        listView.setLayoutParams(params);
     }
 
     // MQTT Connect.
