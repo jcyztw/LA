@@ -17,6 +17,7 @@ public class BubbleList extends BaseAdapter{
     private Context context;
     private ArrayList<Bubble> friendList;
     private static LayoutInflater inflater = null;
+    private Boolean IsGroup = false;
 
     public BubbleList(Context context, ArrayList<Bubble> friendList) {
         this.context = context;

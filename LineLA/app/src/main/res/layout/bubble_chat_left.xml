@@ -4,24 +4,55 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:paddingLeft="10dp">
-
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:background="@drawable/bubble_in01"
-        android:orientation="vertical"
-        android:paddingBottom="10dp"
-        >
+        android:orientation="horizontal"
+        android:layout_alignParentLeft="true">
 
-        <TextView
-            android:id="@+id/txt_msg"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight=".1"
+            android:orientation="horizontal"
+            android:gravity="top">
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:src="@drawable/profile_picture"
+                android:scaleType="fitStart"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:maxWidth="200dp"
-            android:padding="5dp"
-            android:text="" />
+            android:layout_weight=".9"
+            android:orientation="vertical">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="0dp"
+                android:layout_weight="3"
+                android:text="鄭憲宗"
+                android:textColor="#FFFFFF"
+                android:textSize="10dp"/>
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="0dp"
+                android:layout_weight="7"
+                android:background="@drawable/bubble_in01"
+                android:orientation="vertical"
+                android:paddingBottom="10dp"
+                >
 
+                <TextView
+                    android:id="@+id/txt_msg"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:maxWidth="200dp"
+                    android:padding="5dp"
+                    android:text="" />
+
+            </LinearLayout>
+        </LinearLayout>
     </LinearLayout>
-
 </RelativeLayout>

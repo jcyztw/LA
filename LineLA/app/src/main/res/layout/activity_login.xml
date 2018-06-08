@@ -14,18 +14,22 @@
         android:orientation="vertical">
 
         <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="0.2"
             android:layout_gravity="center"
             android:layout_marginTop="180dp"
             app:srcCompat="@drawable/bg_login" />
 
         <Button
             android:id="@+id/btn_login"
-            android:layout_width="300dp"
-            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="0.05"
             android:layout_gravity="center"
             android:layout_marginTop="40dp"
+            android:layout_marginLeft="60dp"
+            android:layout_marginRight="60dp"
             android:background="#e373ce48"
             android:text="學員登入"
             android:textColor="#FFFFFF"
@@ -33,10 +37,14 @@
 
         <Button
             android:id="@+id/btn_exit"
-            android:layout_width="300dp"
-            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="0.05"
             android:layout_gravity="center"
-            android:layout_marginTop="5dp"
+            android:layout_marginTop="40dp"
+            android:layout_marginLeft="60dp"
+            android:layout_marginRight="60dp"
+            android:layout_marginBottom="40dp"
             android:background="#f4f2f2"
             android:text="離開"
             android:textColor="#b3cad6"
@@ -45,7 +53,9 @@
         <Button
             android:id="@+id/btn_test"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="0dp"
+            android:layout_weight="0.05"
+            android:layout_marginBottom="5dp"
             android:text="Button" />
     </LinearLayout>
 

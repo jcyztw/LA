@@ -1,6 +1,8 @@
 package com.example.uscclab.line_la;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.BitmapShader;
@@ -12,8 +14,12 @@ import android.graphics.PorterDuffXfermode;
 import android.graphics.Rect;
 import android.graphics.RectF;
 import android.graphics.Shader;
+import android.os.AsyncTask;
+import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
+import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Base64;
 import android.util.DisplayMetrics;
 import android.view.Gravity;
 import android.view.View;
@@ -23,33 +29,52 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.MalformedURLException;
+import java.net.URL;
+
 public class ConfirmLoginActivity extends AppCompatActivity {
 
+    private TextView tv_memberID;
+    private ImageView Img1;
+    private TextView tv_name;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_confirm_login);
-        ImageView Img1 = (ImageView) findViewById(R.id.img_profile);
 
         Intent intentFromLogin = getIntent();
-        String memberID = "學員卡號 : " + intentFromLogin.getStringExtra("memberID");
+        final String memberID = intentFromLogin.getStringExtra("memberID");
 
-        TextView tv_memberID = (TextView) findViewById(R.id.tv_memberID);
-        TextView tv_name = (TextView) findViewById(R.id.tv_name);
+        tv_memberID = (TextView) findViewById(R.id.tv_memberID);
+        tv_name = (TextView) findViewById(R.id.tv_name);
 
-        tv_memberID.setText(memberID);
+
+        tv_memberID.setText("學員卡號 : " + memberID);
+
+        Img1 = (ImageView) findViewById(R.id.img_profile);
+        getProfile();
+
         // 取得螢幕解析度
-        DisplayMetrics dm = new DisplayMetrics();
-        getWindowManager().getDefaultDisplay().getMetrics(dm);
-        Img1.setImageBitmap(getRoundedCornerBitmap(
-                BitmapFactory.decodeResource(
-                        getResources(), R.drawable.welcome),dm.widthPixels/2.0f,dm));
+//        DisplayMetrics dm = new DisplayMetrics();
+//        getWindowManager().getDefaultDisplay().getMetrics(dm);
+
+//        Img1.setImageBitmap(getRoundedCornerBitmap(
+//                BitmapFactory.decodeResource(
+//                        getResources(), R.drawable.welcome),dm.widthPixels/2.0f,dm));
 
         Button btn_confirm = findViewById(R.id.btn_confirm);
         btn_confirm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent goMain = new Intent(ConfirmLoginActivity.this, MainActivity.class);
+                goMain.putExtra("memberID", memberID);
                 startActivity(goMain);
                 finish();
             }
@@ -66,37 +91,107 @@ public class ConfirmLoginActivity extends AppCompatActivity {
         });
     }
 
-    public static Bitmap getRoundedCornerBitmap(Bitmap bitmap, float roundPx,DisplayMetrics dm)
-    {
-        final int size = dm.widthPixels/4*3;
+    private void getProfile(){
 
-        //縮小圖片
-        int mRadius = Math.min(dm.widthPixels, dm.heightPixels)/2;
-        float mScale = (mRadius * 2.0f) / Math.min(bitmap.getHeight(), bitmap.getWidth());
-        Matrix matrix = new Matrix();
-        matrix.postScale(mScale,mScale); //長寬比例
+        class GetData extends AsyncTask<String,Void,ItemData> {
 
-        //取得縮小圖片
-        Bitmap bitmap1 = Bitmap.createBitmap(bitmap,0,
-                0,bitmap.getWidth(),bitmap.getHeight(),matrix,true);
+            ProgressDialog loading;
+            @Override
+            protected void onPreExecute() {
+                super.onPreExecute();
+                loading = ProgressDialog.show( ConfirmLoginActivity.this, "Gain Data", "Please wait...", true, true);
+            }
+            @Override
+            protected void onPostExecute(ItemData profile) {
+                super.onPostExecute(profile);
 
-        //新增畫布
-        Bitmap output = Bitmap.createBitmap(size,size,Bitmap.Config.ARGB_8888);
-        Canvas canvas = new Canvas(output);
-        final int color = 0xff424242;
-        final Paint paint = new Paint();
+                loading.dismiss();
 
-        // 在畫布上繪製圓角後的矩形(圓形)
-        Rect rect = new Rect(0, 0, size,size);
-        RectF rectF = new RectF(rect);
-        paint.setAntiAlias(true);
-        canvas.drawARGB(0, 0, 0, 0);
-        paint.setColor(color);
-        canvas.drawRoundRect(rectF, roundPx, roundPx, paint);
+                circleImageView(Img1,profile.avatar);
+                tv_name.setText("姓名 : "+profile.memberName);
+            }
 
-        //去掉圓角後矩形之外多餘的像素並繪製
-        paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC_IN));
-        canvas.drawBitmap(bitmap1, 0, 0, paint);
-        return output;
+            @Override
+            protected ItemData doInBackground(String...params) {
+                String addr_profile = "http://140.116.82.39/communicate/GetUserProfile.php?memberID=" + params[0];
+
+                String jsonStrProfile = null;
+
+                ItemData profile = new ItemData();
+
+                URL url;
+                InputStream inputStream;
+                BufferedReader bufferedReader;
+                StringBuilder builder;
+
+                String[] result;
+                result = new String[2];
+                String line = null;
+
+
+                try {
+
+                    // ======= get userProfile ========
+                    url = new URL(addr_profile);
+                    inputStream = url.openConnection().getInputStream();
+
+                    bufferedReader = new BufferedReader(new InputStreamReader(inputStream,"utf8"));
+                    builder = new StringBuilder();
+
+                    while((line = bufferedReader.readLine()) != null) {
+                        builder.append(line + "\n");
+                    }
+                    inputStream.close();
+                    jsonStrProfile = builder.toString();
+
+                } catch (MalformedURLException e) {
+                    e.printStackTrace();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+                // convert data
+                try {
+                    JSONObject jsonobj = new JSONObject(jsonStrProfile);
+                    //JSONArray jsonArray = new JSONArray(input);
+                    result[0] = jsonobj.getString("name");
+                    result[1] = jsonobj.getString("avatar");
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+
+                profile.memberName = result[0];
+
+                byte [] byteAvatar = Base64.decode(result[1],Base64.DEFAULT);
+
+                profile.avatar = BitmapFactory.decodeByteArray(byteAvatar, 0, byteAvatar.length);
+
+                return profile;
+            }
+        }
+
+        String memberID = ConfirmLoginActivity.this.getIntent().getStringExtra("memberID");
+        GetData getdata = new GetData();
+        getdata.execute(memberID);
+    }
+
+    class ItemData{
+        Bitmap avatar;
+        String memberName;
+    }
+
+    public void circleImageView(ImageView imageView, Bitmap srcBitmap){
+
+        Resources mResources = this.getResources();
+
+        // 將圖片切圓角
+        RoundedBitmapDrawable roundedBitmapDrawable = RoundedBitmapDrawableFactory.create(mResources, srcBitmap);
+        roundedBitmapDrawable.setCircular(true);
+
+        // 將轉好的圖貼在imageView中
+        imageView.setImageDrawable(roundedBitmapDrawable);
+
     }
 }
