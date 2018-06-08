@@ -2,6 +2,7 @@ package com.example.uscclab.line_la;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -36,6 +37,10 @@ public class AddFriend extends AppCompatActivity {
     private ImageView imvAvatar;
     private TextView txvName;
     private Button btn;
+    RoomInfo friendItem ;
+    private Bitmap avatar;
+    private String name;
+
 
 
 
@@ -47,6 +52,8 @@ public class AddFriend extends AppCompatActivity {
         imvAvatar = findViewById(R.id.imvAvatarFri);
         txvName = findViewById(R.id.txvNameFri);
         btn = findViewById(R.id.btnFri);
+
+
 
         getProfile_isfriend();
     }
@@ -75,13 +82,23 @@ public class AddFriend extends AppCompatActivity {
             super.onPostExecute(beenFriend);
             loading.dismiss();
 
+            // set avatar, Name
+            circleImageView(imvAvatar, avatar);
+            txvName.setText(name);
+
             if(beenFriend){
-                Toast.makeText(AddFriend.this, "朋友已在好友列表中", Toast.LENGTH_LONG).show();
+                Toast.makeText(AddFriend.this, "你們已是好友", Toast.LENGTH_LONG).show();
                 btn.setVisibility(View.INVISIBLE);
+
+                new android.os.Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        finish();
+                    }
+                }, 2000);
             }else{
                 btn.setVisibility(View.VISIBLE);
             }
-
         }
         @Override
         protected Boolean doInBackground(String...params) {
@@ -94,6 +111,7 @@ public class AddFriend extends AppCompatActivity {
             InputStream inputStream;
             BufferedReader bufferedReader;
             StringBuilder builder;
+
 
             String addr =
                     "http://140.116.82.39/communicate/isFriendAGetProfile.php?memberID_me="
@@ -122,11 +140,14 @@ public class AddFriend extends AppCompatActivity {
             try {
                 JSONObject jsonData = new JSONObject(jsonStr);
                 byte[] byteAvatar = Base64.decode(jsonData.getString("avatar"), Base64.DEFAULT);
-//                imvAvatar.setImageBitmap( BitmapFactory.decodeByteArray( byteAvatar, 0
-//                        , byteAvatar.length) );
-                circleImageView(imvAvatar, BitmapFactory.decodeByteArray( byteAvatar, 0
-                        , byteAvatar.length));
-                txvName.setText(jsonData.getString("name"));
+
+                name = jsonData.getString("name");
+                avatar = BitmapFactory.decodeByteArray( byteAvatar, 0
+                        , byteAvatar.length );
+
+
+
+
                 beenFriend = jsonData.getBoolean("beenFriend");
 
             } catch (JSONException e) {
@@ -135,6 +156,84 @@ public class AddFriend extends AppCompatActivity {
             return beenFriend;
         }
     }
+
+    public void onBeFriend(View v){
+        String memberID_fri, memberID_me;
+
+        memberID_fri = getIntent().getStringExtra("memberID_fri");
+        memberID_me = getIntent().getStringExtra("memberID_me");
+
+        BeFriend beFriend = new BeFriend();
+        beFriend.execute(memberID_me, memberID_fri);
+    }
+
+    class BeFriend extends AsyncTask<String,Void, String> {
+
+        ProgressDialog loading;
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            loading = ProgressDialog.show( AddFriend.this, "Gain Data"
+                    , "Please wait...", true, true);
+        }
+        @Override
+        protected void onPostExecute(String resultMsg) {
+            super.onPostExecute(resultMsg);
+            loading.dismiss();
+
+            Toast.makeText(AddFriend.this,resultMsg, Toast.LENGTH_LONG).show();
+
+            new android.os.Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    finish();
+                }
+            }, 500);
+        }
+        @Override
+        protected String doInBackground(String...params) {
+
+            String jsonStr = null;
+            String line = null;
+            String resultMsg = null;
+            Boolean beenFriend = false;
+
+            URL url;
+            InputStream inputStream;
+            BufferedReader bufferedReader;
+            StringBuilder builder;
+
+            String addr =
+                    "http://140.116.82.39/communicate/InsertFriendRelation.php?memberID_me="
+                            + params[0] + "&memberID_fri=" + params[1];
+
+            // get Data From server
+            try {
+                url = new URL(addr);
+                inputStream = url.openConnection().getInputStream();
+
+                bufferedReader = new BufferedReader(new InputStreamReader(inputStream, "utf8"));
+                builder = new StringBuilder();
+
+                while ((line = bufferedReader.readLine()) != null) {
+                    builder.append(line + "\n");
+                }
+                inputStream.close();
+                resultMsg = builder.toString();
+
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+
+            return resultMsg;
+        }
+    }
+
+
     public void circleImageView(ImageView imageView, Bitmap srcBitmap){
 
         Resources mResources = getResources();
@@ -147,7 +246,5 @@ public class AddFriend extends AppCompatActivity {
         imageView.setImageDrawable(roundedBitmapDrawable);
 
     }
-    public void onClick(View v){
 
-    }
 }

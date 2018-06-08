@@ -2,6 +2,7 @@ package com.example.uscclab.line_la;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -16,6 +17,8 @@ import android.os.Bundle;
 import android.support.annotation.CallSuper;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
+import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
 import android.util.Base64;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -122,8 +125,6 @@ public class TabFriend extends Fragment {
         getProfile();
         getRelation();
 
-
-
         return rootView;
     }
 
@@ -164,10 +165,7 @@ public class TabFriend extends Fragment {
 
                 loading.dismiss();
 
-                DisplayMetrics dm = new DisplayMetrics();
-                getActivity().getWindowManager().getDefaultDisplay().getMetrics(dm);
-                imvAvatar.setImageBitmap( getRoundedCornerBitmap(
-                        profile.avatar,dm.widthPixels/2.0f,dm));
+                circleImageView(imvAvatar, profile.avatar);
                 txvName.setText( profile.memberName);
             }
 
@@ -224,7 +222,7 @@ public class TabFriend extends Fragment {
 
                 profile.memberName = result[0];
 
-                byte [] byteAvatar = Base64.decode(result[1],Base64.DEFAULT);
+                byte [] byteAvatar = Base64.decode(result[1], Base64.DEFAULT);
 
                 profile.avatar = BitmapFactory.decodeByteArray(byteAvatar, 0, byteAvatar.length);
                 
@@ -237,7 +235,7 @@ public class TabFriend extends Fragment {
         getdata.execute(memberID);
     }
 
-    private void getRelation(){
+    public void getRelation(){
 
         class GetData extends AsyncTask<String,Void, Void> {
 
@@ -252,9 +250,10 @@ public class TabFriend extends Fragment {
                 super.onPostExecute(tmp);
                 loading.dismiss();
 
-                listHash.put(listDataHeader.get(0),groupTA);
-                listHash.put(listDataHeader.get(1),groupTB);
-                listHash.put(listDataHeader.get(2),groupTC);
+                listHash.put(listDataHeader.get(0), groupTA);
+                listHash.put(listDataHeader.get(1), groupTB);
+                listHash.put(listDataHeader.get(2), groupTC);
+                listHash.put(listDataHeader.get(3), friend);
 
                 updateExpandableList();
 
@@ -267,7 +266,7 @@ public class TabFriend extends Fragment {
 
                 String jsonStrRelation = null;
                 String line = null;
-                String type = new String();
+                String section = new String();
 
 
                 URL url;
@@ -310,9 +309,9 @@ public class TabFriend extends Fragment {
 
                         item.setIcon(BitmapFactory.decodeByteArray(byteAvatar, 0, byteAvatar.length));
                         item.setName(jsonData.getString("name"));
-                        type = jsonData.getString("type");
+                        section = jsonData.getString("section");
 
-                        switch (type) {
+                        switch (section) {
                             case "0":
                                 groupTA.add(item);
                                 break;
@@ -321,6 +320,9 @@ public class TabFriend extends Fragment {
                                 break;
                             case "2":
                                 groupTC.add(item);
+                                break;
+                            case "3":
+                                friend.add(item);
                                 break;
                             default:
                                 break;
@@ -337,38 +339,17 @@ public class TabFriend extends Fragment {
         GetData getdata = new GetData();
         getdata.execute(memberID);
     }
-    public static Bitmap getRoundedCornerBitmap(Bitmap bitmap, float roundPx,DisplayMetrics dm)
-    {
-        final int size = dm.widthPixels/4*3;
 
-        //縮小圖片
-        int mRadius = Math.min(dm.widthPixels, dm.heightPixels)/2;
-        float mScale = (mRadius * 2.0f) / Math.min(bitmap.getHeight(), bitmap.getWidth());
-        Matrix matrix = new Matrix();
-        matrix.postScale(mScale,mScale); //長寬比例
+    public void circleImageView(ImageView imageView, Bitmap srcBitmap){
 
-        //取得縮小圖片
-        Bitmap bitmap1 = Bitmap.createBitmap(bitmap,0,
-                0,bitmap.getWidth(),bitmap.getHeight(),matrix,true);
+        Resources mResources = getResources();
 
-        //新增畫布
-        Bitmap output = Bitmap.createBitmap(size,size,Bitmap.Config.ARGB_8888);
-        Canvas canvas = new Canvas(output);
-        final int color = 0xff424242;
-        final Paint paint = new Paint();
+        // 將圖片切圓角
+        RoundedBitmapDrawable roundedBitmapDrawable = RoundedBitmapDrawableFactory.create(mResources, srcBitmap);
+        roundedBitmapDrawable.setCircular(true);
 
-        // 在畫布上繪製圓角後的矩形(圓形)
-        Rect rect = new Rect(0, 0, size,size);
-        RectF rectF = new RectF(rect);
-        paint.setAntiAlias(true);
-        canvas.drawARGB(0, 0, 0, 0);
-        paint.setColor(color);
-        canvas.drawRoundRect(rectF, roundPx, roundPx, paint);
-
-        //去掉圓角後矩形之外多餘的像素並繪製
-        paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC_IN));
-        canvas.drawBitmap(bitmap1, 0, 0, paint);
-        return output;
+        // 將轉好的圖貼在imageView中
+        imageView.setImageDrawable(roundedBitmapDrawable);
     }
 
     private void updateExpandableList(){
@@ -381,4 +362,5 @@ public class TabFriend extends Fragment {
         Bitmap avatar;
         String memberName;
     }
+
 }
