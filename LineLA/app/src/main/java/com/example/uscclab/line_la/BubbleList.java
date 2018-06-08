@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -17,11 +18,11 @@ public class BubbleList extends BaseAdapter{
     private Context context;
     private ArrayList<Bubble> friendList;
     private static LayoutInflater inflater = null;
-    private Boolean IsGroup = false;
-
-    public BubbleList(Context context, ArrayList<Bubble> friendList) {
+    private boolean IsGroup = false;
+//    private LinearLayout bubble_char_left_name;
+    private TextView tv_chat_name;
+    public  BubbleList(Context context){
         this.context = context;
-        this.friendList = friendList;
         inflater = (LayoutInflater)this.context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
 
@@ -42,6 +43,21 @@ public class BubbleList extends BaseAdapter{
         return position;
     }
 
+    public boolean getIsGroup() {
+        // TODO Auto-generated method stub
+        return IsGroup;
+    }
+
+    public void setIsGroup(boolean IsGroup) {
+        // TODO Auto-generated method stub
+        this.IsGroup = IsGroup;
+    }
+
+    public void setFriendList(ArrayList<Bubble> friendList) {
+        // TODO Auto-generated method stub
+        this.friendList = friendList;
+    }
+
     @Override
     public View getView(final int position, View convertView, ViewGroup parent) {
         final Bubble Bubble = (Bubble)getItem(position);
@@ -49,12 +65,22 @@ public class BubbleList extends BaseAdapter{
         View rowView = null;
         TextView txt_msg = null;
         int type = Bubble.getType();
+
         if(type == 0){
             rowView = inflater.inflate(R.layout.bubble_chat_left, null);
+            if(!getIsGroup()){
+                tv_chat_name = (TextView) rowView.findViewById(R.id.tv_chat_name);
+                tv_chat_name.setVisibility(View.GONE);
+            }
+            else{
+                txt_msg = (TextView) rowView.findViewById(R.id.tv_chat_name);
+                txt_msg.setText(Bubble.getName());
+            }
         }
         else{
             rowView = inflater.inflate(R.layout.bubble_chat_right, null);
         }
+
 
         txt_msg = (TextView) rowView.findViewById(R.id.txt_msg);
         txt_msg.setText(Bubble.getTxtmsg());

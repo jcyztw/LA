@@ -2,6 +2,7 @@ package com.example.uscclab.line_la;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.method.ScrollingMovementMethod;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
@@ -33,6 +34,7 @@ public class ChatroomActivity extends AppCompatActivity {
     private MqttAndroidClient client;
 
     private int type;
+    private boolean isGroup;
     private LinearLayout ll_chatroom;
     private TextView tv_chatroomname;
     private ArrayList<Bubble> bubble = new ArrayList<Bubble>();
@@ -40,6 +42,7 @@ public class ChatroomActivity extends AppCompatActivity {
     private ListView lv_chat;
     private EditText et_msg;
     private ImageButton btn_send;
+    private String name;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,11 +54,21 @@ public class ChatroomActivity extends AppCompatActivity {
 
         getWindow().setBackgroundDrawableResource(R.drawable.bg_chatroom);
 
+        // set isGroup
+//        Intent intentFromLogin = getIntent();
+//        isGroup = intentFromLogin.getStringExtra("isGroup");
+        isGroup = false;
+
+        // bubblelist
+        bubblelist = new BubbleList(ChatroomActivity.this);
+        bubblelist.setIsGroup(isGroup);
+
         // By Intent and the label is chatroomname. The chatroomname is friendname or groupname.
 //        Intent intentFromLogin = getIntent();
-//        String chatroomname = intentFromLogin.getStringExtra("chatroomname");
+//        name = intentFromLogin.getStringExtra("chatroomname");
+        name = "湯師爺";
         tv_chatroomname = (TextView) findViewById(R.id.tv_chatroomname);
-        tv_chatroomname.setText("湯師爺"); // (chatroomname);
+        tv_chatroomname.setText("湯師爺"); // (name);
 
         // ListViewChat
         lv_chat = (ListView) findViewById(R.id.lv_chat);
@@ -94,8 +107,8 @@ public class ChatroomActivity extends AppCompatActivity {
             @Override
             public void messageArrived(String topic, MqttMessage message) throws Exception {
                 String msg = new String(message.getPayload());
-                bubble.add(new Bubble(type, msg));
-                bubblelist = new BubbleList(ChatroomActivity.this, bubble);
+                bubble.add(new Bubble(type, msg,name));
+                bubblelist.setFriendList(bubble);
                 lv_chat.setAdapter(bubblelist);
                 lv_chat.setSelection(bubblelist.getCount());
                 type = 0;

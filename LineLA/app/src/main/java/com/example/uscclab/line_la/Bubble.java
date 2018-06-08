@@ -6,6 +6,7 @@ package com.example.uscclab.line_la;
 
 public class Bubble {
     private String txtmsg;
+    private String name;
     private int type;
     public  Bubble() {}
 
@@ -14,9 +15,15 @@ public class Bubble {
         this.type = type;
     }
 
-    public String getTxtmsg(){
-        return  txtmsg;
+    public Bubble(int type, String textmsg,String name){
+        this.txtmsg = textmsg;
+        this.type = type;
+        this.name = name;
     }
+
+    public String getTxtmsg(){ return  txtmsg; }
+
+    public String getName(){ return  name; }
 
     public  void setTxtmsg(String txtmsg) { this.txtmsg = txtmsg; }
 
