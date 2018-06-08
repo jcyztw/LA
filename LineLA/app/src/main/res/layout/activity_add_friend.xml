@@ -43,7 +43,7 @@
         android:layout_height="wrap_content"
         android:layout_margin="30dp"
         android:background="#17b510"
-        android:onClick="onClick"
+        android:onClick="onBeFriend"
         android:text="加為好友"
         android:textColor="@color/zxing_status_text"
         android:textSize="18sp"
