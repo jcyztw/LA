@@ -1,8 +1,14 @@
 package com.example.uscclab.line_la;
+import android.app.ProgressDialog;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.os.AsyncTask;
+import android.os.MemoryFile;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.method.ScrollingMovementMethod;
+import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,7 +30,18 @@ import org.eclipse.paho.client.mqttv3.MqttClient;
 import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
 import org.eclipse.paho.client.mqttv3.MqttException;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class ChatroomActivity extends AppCompatActivity {
 
@@ -45,6 +62,10 @@ public class ChatroomActivity extends AppCompatActivity {
     private ImageButton btn_send;
     private String chatRoomName;  // chatroom name
     private String oppositeName = "QAQ";
+    private Bitmap avatar;
+    private String groupID;
+    private String userName;
+    private HashMap<String, Bitmap > memberProfile;
 
     @Override
     
@@ -62,18 +83,36 @@ public class ChatroomActivity extends AppCompatActivity {
 
         // set topic
         topic = getIntent().getStringExtra("chatRoomID");
-
         isGroup = getIntent().getBooleanExtra("isGroup", false);
+        userName = getIntent().getStringExtra("userName");
+
+
+        // get friend avatar
+        if(!isGroup){
+            byte[] b = getIntent().getByteArrayExtra("avatar");
+            avatar = BitmapFactory.decodeByteArray(b, 0, b.length);
+
+            oppositeName = chatRoomName;
+        }
+        // get group memeber name & avatar
+        else
+        {
+            groupID = topic;
+            getGroupMemberData();
+        }
+
+
+        chatRoomName = getIntent().getStringExtra("chatRoomName");
+
 
         // bubblelist
         bubblelist = new BubbleList(ChatroomActivity.this);
         bubblelist.setIsGroup(isGroup);
 
         //The chatroomname is friendname or groupname.
-        Intent intentFromLogin = getIntent();
-        chatRoomName = intentFromLogin.getStringExtra("chatRoomName");
         tv_chatroomname = (TextView) findViewById(R.id.tv_chatroomname);
         tv_chatroomname.setText(chatRoomName);
+
 
 
         // ListViewChat
@@ -93,7 +132,7 @@ public class ChatroomActivity extends AppCompatActivity {
                 editMsg.setText("", TextView.BufferType.EDITABLE);  // clear text in editText
                 if(!str.isEmpty()){
                     type = 1;
-                    pub(str);
+                    pub(userName + ":" + str);
                 }
                 else{
                     Toast.makeText(ChatroomActivity.this, "請輸入訊息！"
@@ -115,19 +154,102 @@ public class ChatroomActivity extends AppCompatActivity {
             @Override
             public void messageArrived(String topic, MqttMessage message) throws Exception {
                 String msg = new String(message.getPayload());
-                bubbles.add(new Bubble(type, msg, oppositeName));
+
+                String [] msgs = msg.split(":");
+
+                if(!isGroup){
+                    bubbles.add(new Bubble(type, msgs[1], msgs[0], avatar));
+                }
+                else{
+                    bubbles.add(new Bubble(type, msgs[1], msgs[0], memberProfile.get(msgs[0])));
+                }
+
                 bubblelist.setFriendList(bubbles);
                 lv_chat.setAdapter(bubblelist);
                 lv_chat.setSelection(bubblelist.getCount());
                 type = 0;
             }
-
             @Override
             public void deliveryComplete(IMqttDeliveryToken token) {
 
             }
         });
     }
+
+
+    public void getGroupMemberData(){
+        memberProfile = new HashMap<>();
+        GetData getdata = new GetData();
+        getdata.execute(groupID);
+    }
+    class GetData extends AsyncTask<String,Void, Void> {
+
+        ProgressDialog loading;
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            loading = ProgressDialog.show( ChatroomActivity.this, "Gain Data", "Please wait...", true, true);
+        }
+        @Override
+        protected void onPostExecute(Void tmp) {
+            super.onPostExecute(tmp);
+            loading.dismiss();
+        }
+        @Override
+        protected Void doInBackground(String...params) {
+
+            String addr_relation = "http://140.116.82.39/communicate/GetGroupMember.php?groupID=" + params[0];
+
+            String jsonStrRelation = null;
+            String line = null;
+            String section = new String();
+
+            URL url;
+            InputStream inputStream;
+            BufferedReader bufferedReader;
+            StringBuilder builder;
+
+            // get Data From server
+            try {
+                url = new URL(addr_relation);
+                inputStream = url.openConnection().getInputStream();
+
+                bufferedReader = new BufferedReader(new InputStreamReader(inputStream, "utf8"));
+                builder = new StringBuilder();
+
+                while ((line = bufferedReader.readLine()) != null) {
+                    builder.append(line + "\n");
+                }
+                inputStream.close();
+                jsonStrRelation = builder.toString();
+
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            // 1. convert data
+            try {
+                JSONArray jsonArray = new JSONArray(jsonStrRelation);
+                for (int i = 0; i < jsonArray.length(); ++i) {
+
+                    JSONObject jsonData = jsonArray.getJSONObject(i);
+
+                    byte[] byteAvatar = Base64.decode(jsonData.getString("avatar")
+                            , Base64.DEFAULT);
+
+                    memberProfile.put(jsonData.getString("name")
+                            , BitmapFactory.decodeByteArray(byteAvatar, 0, byteAvatar.length));
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+    }
+
+
 
     // MQTT Connect.
     public void Connect(){

@@ -1,10 +1,15 @@
 package com.example.uscclab.line_la;
 
 import android.content.Context;
+import android.content.res.Resources;
+import android.graphics.Bitmap;
+import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
+import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -21,6 +26,10 @@ public class BubbleList extends BaseAdapter{
     private boolean IsGroup = false;
 //    private LinearLayout bubble_char_left_name;
     private TextView tv_chat_name;
+    private ImageView imvAvatar;
+
+
+
     public  BubbleList(Context context){
         this.context = context;
         inflater = (LayoutInflater)this.context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -69,6 +78,10 @@ public class BubbleList extends BaseAdapter{
         // Opposite
         if(type == 0){
             rowView = inflater.inflate(R.layout.bubble_chat_left, null);
+
+            imvAvatar = rowView.findViewById(R.id.imvAvatarChat);
+            circleImageView(imvAvatar, Bubble.getAvatar());
+
             // chat with friend
             if(!getIsGroup()){
                 tv_chat_name = (TextView) rowView.findViewById(R.id.tv_chat_name);
@@ -91,4 +104,18 @@ public class BubbleList extends BaseAdapter{
 
         return rowView;
     }
+
+    public void circleImageView(ImageView imageView, Bitmap srcBitmap){
+
+        Resources mResources = context.getResources();
+
+        // 將圖片切圓角
+        RoundedBitmapDrawable roundedBitmapDrawable = RoundedBitmapDrawableFactory.create(mResources, srcBitmap);
+        roundedBitmapDrawable.setCircular(true);
+
+        // 將轉好的圖貼在imageView中
+        imageView.setImageDrawable(roundedBitmapDrawable);
+
+    }
+
 }

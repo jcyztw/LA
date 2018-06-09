@@ -18,11 +18,13 @@
             android:layout_weight=".13"
             android:orientation="horizontal"
             android:gravity="top">
+
             <ImageView
+                android:id="@+id/imvAvatarChat"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:src="@drawable/profile_picture"
-                android:scaleType="fitStart"/>
+                android:scaleType="fitStart"
+                android:src="@drawable/profile_picture" />
         </LinearLayout>
 
         <LinearLayout

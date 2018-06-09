@@ -35,6 +35,7 @@ import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -100,7 +101,12 @@ public class TabFriend extends Fragment {
                 //goChatRoom.putExtra("id",userID);
                 //goChatRoom.putExtra("friend_id",friendID);
 
-//                Log.i("#####", selectedItem.getchatRoomID());
+                if(!selectedItem.getIsGroup()){
+                    ByteArrayOutputStream bs = new ByteArrayOutputStream();
+                    selectedItem.getIcon().compress(Bitmap.CompressFormat.JPEG,100,bs);
+                    goChatRoom.putExtra("avatar", bs.toByteArray());
+                }
+                goChatRoom.putExtra("userName", txvName.getText() );
                 goChatRoom.putExtra("chatRoomID", selectedItem.getchatRoomID());
                 goChatRoom.putExtra("isGroup", selectedItem.getIsGroup());
                 goChatRoom.putExtra("chatRoomName", selectedItem.getName());
@@ -240,6 +246,7 @@ public class TabFriend extends Fragment {
     }
 
     public void getRelation(){
+
 
         class GetData extends AsyncTask<String,Void, Void> {
 
