@@ -16,6 +16,7 @@ public class RoomInfo implements Serializable {
     private String StudentID;
     private Bitmap icon;
     private ArrayList<String> mamberList = null;
+    private Boolean isGroup;
 
     public RoomInfo() {}
 

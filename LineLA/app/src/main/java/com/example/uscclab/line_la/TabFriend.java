@@ -92,6 +92,11 @@ public class TabFriend extends Fragment {
             @Override
             public boolean onChildClick(ExpandableListView parent, View v, int groupPosition, int childPosition, long id) {
                 int group_class = groupPosition;
+
+                Intent goChatroom = new Intent( getActivity(), ChatroomActivity.class );
+                startActivity(goChatroom);
+
+
 //                if(group_class == 1){
 //                    //Log.d("Tag","好友click");
 //                    RoomInfo tmp = (RoomInfo)listAdapter.getChild(groupPosition,childPosition);
@@ -123,11 +128,25 @@ public class TabFriend extends Fragment {
         //=/ =====for expandablist=====
 
         getProfile();
-        getRelation();
 
         return rootView;
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        Log.e("DEBUG", "onResume of LoginFragment");
+        
+        clearListConten();
+        getRelation();
+    }
+
+    private void clearListConten(){
+        groupTA.clear();
+        groupTB.clear();
+        groupTC.clear();
+        friend.clear();
+    }
     // =====for expandablist=====
     private void initData(){
         listDataHeader = new ArrayList<>();
@@ -301,7 +320,6 @@ public class TabFriend extends Fragment {
                     for (int i = 0; i < jsonArray.length(); ++i) {
 
                         JSONObject jsonData = jsonArray.getJSONObject(i);
-
 
                         byte[] byteAvatar = Base64.decode(jsonData.getString("avatar"), Base64.DEFAULT);
 

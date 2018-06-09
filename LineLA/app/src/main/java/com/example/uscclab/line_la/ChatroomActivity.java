@@ -1,4 +1,5 @@
 package com.example.uscclab.line_la;
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.method.ScrollingMovementMethod;
@@ -50,15 +51,16 @@ public class ChatroomActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
+
+        // hide keyboard when enter into the page
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
         setContentView(R.layout.activity_chatroom);
 
         getWindow().setBackgroundDrawableResource(R.drawable.bg_chatroom);
 
-        // set isGroup
-//        Intent intentFromLogin = getIntent();
-//        isGroup = intentFromLogin.getStringExtra("isGroup");
-        isGroup = false;
+
+        isGroup = getIntent().getBooleanExtra("isGroup", false);
+
 
         // bubblelist
         bubblelist = new BubbleList(ChatroomActivity.this);
@@ -182,4 +184,5 @@ public class ChatroomActivity extends AppCompatActivity {
             e.printStackTrace();
         }
     }
+
 }
