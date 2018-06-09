@@ -73,8 +73,8 @@ public class BubbleList extends BaseAdapter{
                 tv_chat_name.setVisibility(View.GONE);
             }
             else{
-                txt_msg = (TextView) rowView.findViewById(R.id.tv_chat_name);
-                txt_msg.setText(Bubble.getName());
+                tv_chat_name = (TextView) rowView.findViewById(R.id.tv_chat_name);
+                tv_chat_name.setText(Bubble.getName());
             }
         }
         else{

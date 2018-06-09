@@ -37,14 +37,15 @@ public class ChatroomActivity extends AppCompatActivity {
     private boolean isGroup;
     private LinearLayout ll_chatroom;
     private TextView tv_chatroomname;
-    private ArrayList<Bubble> bubble = new ArrayList<Bubble>();
+    private ArrayList<Bubble> bubble = new ArrayList<Bubble>(); //items
     private BubbleList bubblelist;
     private ListView lv_chat;
     private EditText et_msg;
     private ImageButton btn_send;
-    private String name;
+    private String name;  // chatroom name
 
     @Override
+    
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
@@ -84,7 +85,7 @@ public class ChatroomActivity extends AppCompatActivity {
             public void onClick(View v) {
                 //test
                 String str = et_msg.getText().toString();
-                et_msg.setText("", TextView.BufferType.EDITABLE);
+                et_msg.setText("", TextView.BufferType.EDITABLE);  // clear
                 if(!str.isEmpty()){
                     type = 1;
                     pub(str);
@@ -130,20 +131,21 @@ public class ChatroomActivity extends AppCompatActivity {
         options.setUserName(USERNAME);
         options.setPassword(PASSWORD.toCharArray());
 
+        // ---- up is for connection
         try {
             IMqttToken token = client.connect(options);
             token.setActionCallback(new IMqttActionListener() {
                 @Override
                 public void onSuccess(IMqttToken asyncActionToken) {
                     // We are connected
-                    Toast.makeText(ChatroomActivity.this,"連線成功!",Toast.LENGTH_LONG).show();
+                    Toast.makeText(ChatroomActivity.this,"連線成功!",Toast.LENGTH_SHORT).show();
                     Subscribe();
                 }
 
                 @Override
                 public void onFailure(IMqttToken asyncActionToken, Throwable exception) {
                     // Something went wrong e.g. connection timeout or firewall problems
-                    Toast.makeText(ChatroomActivity.this,"您連線尚未連線!",Toast.LENGTH_LONG).show();
+                    Toast.makeText(ChatroomActivity.this,"您連線尚未連線!",Toast.LENGTH_SHORT).show();
                 }
             });
         } catch (MqttException e) {
