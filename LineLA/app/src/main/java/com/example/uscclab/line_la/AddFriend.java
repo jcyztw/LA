@@ -145,11 +145,7 @@ public class AddFriend extends AppCompatActivity {
                 avatar = BitmapFactory.decodeByteArray( byteAvatar, 0
                         , byteAvatar.length );
 
-
-
-
                 beenFriend = jsonData.getBoolean("beenFriend");
-
             } catch (JSONException e) {
                 e.printStackTrace();
             }

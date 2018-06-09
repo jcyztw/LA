@@ -15,12 +15,14 @@ import android.graphics.Rect;
 import android.graphics.RectF;
 import android.graphics.Shader;
 import android.os.AsyncTask;
+import android.os.Looper;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Base64;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
@@ -28,6 +30,7 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -44,6 +47,9 @@ public class ConfirmLoginActivity extends AppCompatActivity {
     private TextView tv_memberID;
     private ImageView Img1;
     private TextView tv_name;
+    private Boolean isExist;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -107,8 +113,16 @@ public class ConfirmLoginActivity extends AppCompatActivity {
 
                 loading.dismiss();
 
-                circleImageView(Img1,profile.avatar);
-                tv_name.setText("姓名 : "+profile.memberName);
+                if(!isExist){
+                    //Looper.prepare();
+                    Toast.makeText(ConfirmLoginActivity.this,"查無此人，請重新掃描", Toast.LENGTH_LONG).show();
+                    startActivity(new Intent(ConfirmLoginActivity.this, LoginActivity.class));
+                    finish();
+                   //Looper.loop();
+                }else{
+                    circleImageView(Img1,profile.avatar);
+                    tv_name.setText("姓名 : "+profile.memberName);
+                }
             }
 
             @Override
@@ -149,29 +163,29 @@ public class ConfirmLoginActivity extends AppCompatActivity {
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
+                if(!jsonStrProfile.equals("0\n")){
+                    isExist = true;
+                    // convert data
+                    try {
+                        JSONObject jsonobj = new JSONObject(jsonStrProfile);
+                        //JSONArray jsonArray = new JSONArray(input);
+                        result[0] = jsonobj.getString("name");
+                        result[1] = jsonobj.getString("avatar");
 
-                // convert data
-                try {
-                    JSONObject jsonobj = new JSONObject(jsonStrProfile);
-                    //JSONArray jsonArray = new JSONArray(input);
-                    result[0] = jsonobj.getString("name");
-                    result[1] = jsonobj.getString("avatar");
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                    profile.memberName = result[0];
 
-                } catch (JSONException e) {
-                    e.printStackTrace();
+                    byte [] byteAvatar = Base64.decode(result[1],Base64.DEFAULT);
+
+                    profile.avatar = BitmapFactory.decodeByteArray(byteAvatar, 0, byteAvatar.length);
                 }
-
-
-                profile.memberName = result[0];
-
-                byte [] byteAvatar = Base64.decode(result[1],Base64.DEFAULT);
-
-                profile.avatar = BitmapFactory.decodeByteArray(byteAvatar, 0, byteAvatar.length);
-
                 return profile;
             }
         }
 
+        isExist = false;
         String memberID = ConfirmLoginActivity.this.getIntent().getStringExtra("memberID");
         GetData getdata = new GetData();
         getdata.execute(memberID);

@@ -123,9 +123,7 @@ public class LoginActivity extends AppCompatActivity {
                 Log.d("####", "Cancelled scan");
             } else {
                 Log.d("####", "Scanned");
-                Toast.makeText(this, "掃描結果: " + result.getContents(), Toast.LENGTH_LONG ).show();   // 顯示條碼
-
-
+                // Toast.makeText(this, "掃描結果: " + result.getContents(), Toast.LENGTH_LONG ).show();   // 顯示條碼
 
 
                 Intent goConfirmLogin = new Intent(LoginActivity.this, ConfirmLoginActivity.class);
