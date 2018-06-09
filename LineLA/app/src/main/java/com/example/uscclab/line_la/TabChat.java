@@ -33,7 +33,7 @@ public class TabChat extends Fragment implements AdapterView.OnItemClickListener
         lsv.setOnItemClickListener(this);
         chatItemList = new ChatItemList(context);
 //        Bitmap b =  BitmapFactory.decodeResource(context.getResources(),R.drawable.bg_login);
-        chatItems.add(new ChatItem(false, "馬匪 任何時候都要剿", "湯師爺", "22:13", BitmapFactory.decodeResource(context.getResources(),R.drawable.bg_login)));
+        chatItems.add(new ChatItem(true, "竹北高鐵 4號出口", "交通組", "23:05", BitmapFactory.decodeResource(context.getResources(),R.drawable.bg_login)));
         chatItemList.setchatList(chatItems);
         lsv.setAdapter(chatItemList);
         lsv.setSelection(chatItemList.getCount());
