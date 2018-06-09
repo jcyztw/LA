@@ -66,17 +66,21 @@ public class BubbleList extends BaseAdapter{
         TextView txt_msg = null;
         int type = Bubble.getType();
 
+        // Opposite
         if(type == 0){
             rowView = inflater.inflate(R.layout.bubble_chat_left, null);
+            // chat with friend
             if(!getIsGroup()){
                 tv_chat_name = (TextView) rowView.findViewById(R.id.tv_chat_name);
                 tv_chat_name.setVisibility(View.GONE);
             }
+            // chat in group
             else{
                 tv_chat_name = (TextView) rowView.findViewById(R.id.tv_chat_name);
                 tv_chat_name.setText(Bubble.getName());
             }
         }
+        // me
         else{
             rowView = inflater.inflate(R.layout.bubble_chat_right, null);
         }

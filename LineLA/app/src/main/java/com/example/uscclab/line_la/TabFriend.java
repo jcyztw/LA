@@ -91,36 +91,21 @@ public class TabFriend extends Fragment {
         expLsvPeople.setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
             @Override
             public boolean onChildClick(ExpandableListView parent, View v, int groupPosition, int childPosition, long id) {
-                int group_class = groupPosition;
 
-                Intent goChatroom = new Intent( getActivity(), ChatroomActivity.class );
-                startActivity(goChatroom);
+                RoomInfo selectedItem = (RoomInfo)listAdapter.getChild(groupPosition,childPosition);
 
+                String chatName = selectedItem.getName();
 
-//                if(group_class == 1){
-//                    //Log.d("Tag","好友click");
-//                    RoomInfo tmp = (RoomInfo)listAdapter.getChild(groupPosition,childPosition);
-//                    String friendID = tmp.getStudentID();
-//                    String chatName = tmp.getName();
-//
-//                    Intent chat = new Intent(Main.this,Chatroom.class);
-//                    chat.putExtra("id",userID);
-//                    chat.putExtra("friend_id",friendID);
-//                    chat.putExtra("chatName", chatName);
-//                    startActivity(chat);
-//
-//                } else if(group_class == 0) {
-//                    groupPosition=1;
-//                    RoomInfo tmp = (RoomInfo)listAdapter.getChild(groupPosition,childPosition);
-//                    String chatName = "aaa";
-//                    String roomID = tmp.getStudentID();
-//
-//                    Intent chat = new Intent(Main.this,Chatroom.class);
-//                    chat.putExtra("id",userID);
-//                    chat.putExtra("friend_id",roomID);
-//                    chat.putExtra("chatName", chatName);
-//                    startActivity(chat);
-//                }
+                Intent goChatRoom = new Intent( getActivity(), ChatroomActivity.class );
+                //goChatRoom.putExtra("id",userID);
+                //goChatRoom.putExtra("friend_id",friendID);
+
+//                Log.i("#####", selectedItem.getchatRoomID());
+                goChatRoom.putExtra("chatRoomID", selectedItem.getchatRoomID());
+                goChatRoom.putExtra("isGroup", selectedItem.getIsGroup());
+                goChatRoom.putExtra("chatRoomName", selectedItem.getName());
+                startActivity(goChatRoom);
+
                 return false;
             }
         });
@@ -135,8 +120,8 @@ public class TabFriend extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        Log.e("DEBUG", "onResume of LoginFragment");
-        
+        // Log.e("DEBUG", "onResume of LoginFragment");
+
         clearListConten();
         getRelation();
     }
@@ -275,9 +260,7 @@ public class TabFriend extends Fragment {
                 listHash.put(listDataHeader.get(3), friend);
 
                 updateExpandableList();
-
             }
-
             @Override
             protected Void doInBackground(String...params) {
 
@@ -287,12 +270,10 @@ public class TabFriend extends Fragment {
                 String line = null;
                 String section = new String();
 
-
                 URL url;
                 InputStream inputStream;
                 BufferedReader bufferedReader;
                 StringBuilder builder;
-
 
                 // get Data From server
                 try {
@@ -327,19 +308,28 @@ public class TabFriend extends Fragment {
 
                         item.setIcon(BitmapFactory.decodeByteArray(byteAvatar, 0, byteAvatar.length));
                         item.setName(jsonData.getString("name"));
+                        item.setchatRoomID( jsonData.getString("chatRoomID") );
+
+
+                        //Log.i("####chatRoomID", item.getchatRoomID());
+
                         section = jsonData.getString("section");
 
                         switch (section) {
                             case "0":
+                                item.setIsGroup(true);
                                 groupTA.add(item);
                                 break;
                             case "1":
+                                item.setIsGroup(true);
                                 groupTB.add(item);
                                 break;
                             case "2":
+                                item.setIsGroup(true);
                                 groupTC.add(item);
                                 break;
                             case "3":
+                                item.setIsGroup(false);
                                 friend.add(item);
                                 break;
                             default:
@@ -352,7 +342,6 @@ public class TabFriend extends Fragment {
                 return null;
             }
         }
-
         String memberID = getActivity().getIntent().getStringExtra("memberID");
         GetData getdata = new GetData();
         getdata.execute(memberID);

@@ -157,9 +157,7 @@ public class AddFriend extends AppCompatActivity {
                     e.printStackTrace();
                 }
             }
-
             // convert data
-
             return beenFriend;
         }
     }

@@ -31,19 +31,20 @@ public class ChatroomActivity extends AppCompatActivity {
     static private String MQTTHOST = "tcp://140.116.82.34:1883";
     static private String USERNAME = "LineLA";
     static private String PASSWORD = "LineLA";
-    private String topicStr = "test";
+    private String topic;       // groupID or friendRelationID
     private MqttAndroidClient client;
 
     private int type;
     private boolean isGroup;
     private LinearLayout ll_chatroom;
     private TextView tv_chatroomname;
-    private ArrayList<Bubble> bubble = new ArrayList<Bubble>(); //items
-    private BubbleList bubblelist;
+    private ArrayList<Bubble> bubbles = new ArrayList<Bubble>(); //? items
+    private BubbleList bubblelist;          //? adapter
     private ListView lv_chat;
-    private EditText et_msg;
+    private EditText editMsg;
     private ImageButton btn_send;
-    private String name;  // chatroom name
+    private String chatRoomName;  // chatroom name
+    private String oppositeName = "QAQ";
 
     @Override
     
@@ -59,26 +60,28 @@ public class ChatroomActivity extends AppCompatActivity {
         getWindow().setBackgroundDrawableResource(R.drawable.bg_chatroom);
 
 
-        isGroup = getIntent().getBooleanExtra("isGroup", false);
+        // set topic
+        topic = getIntent().getStringExtra("chatRoomID");
 
+        isGroup = getIntent().getBooleanExtra("isGroup", false);
 
         // bubblelist
         bubblelist = new BubbleList(ChatroomActivity.this);
         bubblelist.setIsGroup(isGroup);
 
-        // By Intent and the label is chatroomname. The chatroomname is friendname or groupname.
-//        Intent intentFromLogin = getIntent();
-//        name = intentFromLogin.getStringExtra("chatroomname");
-        name = "湯師爺";
+        //The chatroomname is friendname or groupname.
+        Intent intentFromLogin = getIntent();
+        chatRoomName = intentFromLogin.getStringExtra("chatRoomName");
         tv_chatroomname = (TextView) findViewById(R.id.tv_chatroomname);
-        tv_chatroomname.setText("湯師爺"); // (name);
+        tv_chatroomname.setText(chatRoomName);
+
 
         // ListViewChat
         lv_chat = (ListView) findViewById(R.id.lv_chat);
 
-        // et_msg
-        et_msg = (EditText) findViewById(R.id.et_msg);
-        et_msg.setMovementMethod(ScrollingMovementMethod.getInstance());
+        // editMsg
+        editMsg = (EditText) findViewById(R.id.et_msg);
+        editMsg.setMovementMethod( ScrollingMovementMethod.getInstance() );
 
         // btn_send send message.
         btn_send = (ImageButton) findViewById(R.id.btn_send);
@@ -86,14 +89,15 @@ public class ChatroomActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 //test
-                String str = et_msg.getText().toString();
-                et_msg.setText("", TextView.BufferType.EDITABLE);  // clear
+                String str = editMsg.getText().toString();
+                editMsg.setText("", TextView.BufferType.EDITABLE);  // clear text in editText
                 if(!str.isEmpty()){
                     type = 1;
                     pub(str);
                 }
                 else{
-                    Toast.makeText(ChatroomActivity.this, "請輸入訊息！", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(ChatroomActivity.this, "請輸入訊息！"
+                                    , Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -107,11 +111,12 @@ public class ChatroomActivity extends AppCompatActivity {
 
             }
 
+            // get Msg from server
             @Override
             public void messageArrived(String topic, MqttMessage message) throws Exception {
                 String msg = new String(message.getPayload());
-                bubble.add(new Bubble(type, msg,name));
-                bubblelist.setFriendList(bubble);
+                bubbles.add(new Bubble(type, msg, oppositeName));
+                bubblelist.setFriendList(bubbles);
                 lv_chat.setAdapter(bubblelist);
                 lv_chat.setSelection(bubblelist.getCount());
                 type = 0;
@@ -126,6 +131,8 @@ public class ChatroomActivity extends AppCompatActivity {
 
     // MQTT Connect.
     public void Connect(){
+
+        // connection setting
         String clientId = MqttClient.generateClientId();
         client = new MqttAndroidClient(this.getApplicationContext(), MQTTHOST, clientId);
         MqttConnectOptions options = new MqttConnectOptions();
@@ -133,7 +140,7 @@ public class ChatroomActivity extends AppCompatActivity {
         options.setUserName(USERNAME);
         options.setPassword(PASSWORD.toCharArray());
 
-        // ---- up is for connection
+        // connet to server
         try {
             IMqttToken token = client.connect(options);
             token.setActionCallback(new IMqttActionListener() {
@@ -147,7 +154,7 @@ public class ChatroomActivity extends AppCompatActivity {
                 @Override
                 public void onFailure(IMqttToken asyncActionToken, Throwable exception) {
                     // Something went wrong e.g. connection timeout or firewall problems
-                    Toast.makeText(ChatroomActivity.this,"您連線尚未連線!",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(ChatroomActivity.this,"連線失敗!",Toast.LENGTH_SHORT).show();
                 }
             });
         } catch (MqttException e) {
@@ -158,7 +165,7 @@ public class ChatroomActivity extends AppCompatActivity {
     public void Subscribe() {
         int qos = 0;
         try {
-            IMqttToken subToken = client.subscribe("test",0);
+            IMqttToken subToken = client.subscribe(topic,0);
             subToken.setActionCallback(new IMqttActionListener() {
                 @Override
                 public void onSuccess(IMqttToken asyncActionToken) {
@@ -177,7 +184,6 @@ public class ChatroomActivity extends AppCompatActivity {
 
     // pub msg to mqtt server
     public void pub(String msg){
-        String topic = topicStr;
         try {
             client.publish(topic, msg.getBytes(), 0, false);
         } catch (MqttException e) {

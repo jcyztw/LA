@@ -13,7 +13,7 @@ public class RoomInfo implements Serializable {
 
     private String roomName;
     private String Name;
-    private String StudentID;
+    private String chatRoomID;
     private Bitmap icon;
     private ArrayList<String> mamberList = null;
     private Boolean isGroup;
@@ -24,19 +24,26 @@ public class RoomInfo implements Serializable {
         this.roomName = roomName;
     }
 
-    public RoomInfo(String Name, String StudentID) {
+    public RoomInfo(String Name, String chatRoomID) {
         this.Name = Name;
-        this.StudentID = StudentID;
+        this.chatRoomID = chatRoomID;
     }
 
-    public RoomInfo(String roomName, String name, String studentID, Bitmap icon, ArrayList<String> mamberList) {
+    public RoomInfo(String roomName, String name, String chatRoomID, Bitmap icon, ArrayList<String> mamberList) {
         this.roomName = roomName;
         Name = name;
-        StudentID = studentID;
+        chatRoomID = chatRoomID;
         this.icon = icon;
         this.mamberList = mamberList;
     }
 
+    public boolean getIsGroup() {
+        return isGroup;
+    }
+
+    public void setIsGroup(boolean isGroup) {
+        this.isGroup = isGroup;
+    }
     public String getRoomName() {
         return roomName;
     }
@@ -53,12 +60,12 @@ public class RoomInfo implements Serializable {
         Name = name;
     }
 
-    public String getStudentID() {
-        return StudentID;
+    public String getchatRoomID() {
+        return chatRoomID;
     }
 
-    public void setStudentID(String studentID) {
-        StudentID = studentID;
+    public void setchatRoomID(String chatRoomID) {
+        this.chatRoomID = chatRoomID;
     }
 
     public Bitmap getIcon() {

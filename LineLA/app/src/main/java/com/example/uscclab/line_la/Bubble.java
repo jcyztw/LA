@@ -7,7 +7,7 @@ package com.example.uscclab.line_la;
 public class Bubble {
     private String txtmsg;
     private String name;
-    private int type;
+    private int type;       // indicate the left of right
     public  Bubble() {}
 
     public Bubble(int type, String textmsg){
@@ -15,7 +15,7 @@ public class Bubble {
         this.type = type;
     }
 
-    public Bubble(int type, String textmsg,String name){
+    public Bubble(int type, String textmsg, String name){
         this.txtmsg = textmsg;
         this.type = type;
         this.name = name;
