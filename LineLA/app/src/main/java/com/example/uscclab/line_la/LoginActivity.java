@@ -25,15 +25,6 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-//      test chatroom -> go to chatroom.
-        Button btn_test = findViewById(R.id.btn_test);
-        btn_test.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent goChatroom = new Intent(LoginActivity.this, ChatroomActivity.class);
-                startActivity(goChatroom);
-            }
-        });
 
         Button btn_logIn = findViewById(R.id.btn_login); //line:30
         btn_logIn.setOnClickListener(new View.OnClickListener() {
