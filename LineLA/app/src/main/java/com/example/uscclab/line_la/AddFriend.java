@@ -40,8 +40,7 @@ public class AddFriend extends AppCompatActivity {
     RoomInfo friendItem ;
     private Bitmap avatar;
     private String name;
-
-
+    private Boolean isUserExist;
 
 
     @Override
@@ -53,8 +52,6 @@ public class AddFriend extends AppCompatActivity {
         txvName = findViewById(R.id.txvNameFri);
         btn = findViewById(R.id.btnFri);
 
-
-
         getProfile_isfriend();
     }
 
@@ -63,6 +60,8 @@ public class AddFriend extends AppCompatActivity {
 
         memberID_fri = getIntent().getStringExtra("memberID_fri");
         memberID_me = getIntent().getStringExtra("memberID_me");
+
+        isUserExist = false;
 
         GetData getdata = new GetData();
         getdata.execute(memberID_me, memberID_fri);
@@ -82,22 +81,28 @@ public class AddFriend extends AppCompatActivity {
             super.onPostExecute(beenFriend);
             loading.dismiss();
 
-            // set avatar, Name
-            circleImageView(imvAvatar, avatar);
-            txvName.setText(name);
+            if(!isUserExist){
+                Toast.makeText(AddFriend.this,"查無此人，請重新掃描", Toast.LENGTH_LONG).show();
+                finish();
+            }
+            else{
+                // set avatar, Name
+                circleImageView(imvAvatar, avatar);
+                txvName.setText(name);
 
-            if(beenFriend){
-                Toast.makeText(AddFriend.this, "你們已是好友", Toast.LENGTH_LONG).show();
-                btn.setVisibility(View.INVISIBLE);
+                if(beenFriend){
+                    Toast.makeText(AddFriend.this, "你們已是好友", Toast.LENGTH_LONG).show();
+                    btn.setVisibility(View.INVISIBLE);
 
-                new android.os.Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        finish();
-                    }
-                }, 2000);
-            }else{
-                btn.setVisibility(View.VISIBLE);
+                    new android.os.Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            finish();
+                        }
+                    }, 2000);
+                }else{
+                    btn.setVisibility(View.VISIBLE);
+                }
             }
         }
         @Override
@@ -136,19 +141,25 @@ public class AddFriend extends AppCompatActivity {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            // convert data
-            try {
-                JSONObject jsonData = new JSONObject(jsonStr);
-                byte[] byteAvatar = Base64.decode(jsonData.getString("avatar"), Base64.DEFAULT);
 
-                name = jsonData.getString("name");
-                avatar = BitmapFactory.decodeByteArray( byteAvatar, 0
-                        , byteAvatar.length );
+            if(!jsonStr.equals("0\n")){
+                isUserExist = true;
+                try {
+                    JSONObject jsonData = new JSONObject(jsonStr);
+                    byte[] byteAvatar = Base64.decode(jsonData.getString("avatar"), Base64.DEFAULT);
 
-                beenFriend = jsonData.getBoolean("beenFriend");
-            } catch (JSONException e) {
-                e.printStackTrace();
+                    name = jsonData.getString("name");
+                    avatar = BitmapFactory.decodeByteArray( byteAvatar, 0
+                            , byteAvatar.length );
+
+                    beenFriend = jsonData.getBoolean("beenFriend");
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
             }
+
+            // convert data
+
             return beenFriend;
         }
     }
