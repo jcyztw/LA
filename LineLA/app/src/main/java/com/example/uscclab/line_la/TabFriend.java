@@ -140,11 +140,11 @@ public class TabFriend extends Fragment {
         super.onResume();
         // Log.e("DEBUG", "onResume of LoginFragment");
 
-        clearListConten();
+        clearListContent();
         getRelation();
     }
 
-    private void clearListConten(){
+    private void clearListContent(){
         groupTA.clear();
         groupTB.clear();
         groupTC.clear();
