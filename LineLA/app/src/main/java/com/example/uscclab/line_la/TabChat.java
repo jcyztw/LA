@@ -41,11 +41,13 @@ public class TabChat extends Fragment implements AdapterView.OnItemClickListener
         Context context = rootView.getContext();
         lsv = (ListView) rootView.findViewById(R.id.lsv);
         lsv.setOnItemClickListener(this);
-        chatItemList = new ChatItemList(context);
-        chatItems.add(new ChatItem(true, "", "交通組", "", BitmapFactory.decodeResource(context.getResources(),R.drawable.travel)));
-        chatItemList.setchatList(chatItems);
-        lsv.setAdapter(chatItemList);
-        lsv.setSelection(chatItemList.getCount());
+//        chatItemList = new ChatItemList(context);
+//        chatItemList = (ChatItemList)lsv.getAdapter();
+//        chatItems = chatItemList.getchatList();
+//        chatItems.add(new ChatItem(true, "", "交通組", "", BitmapFactory.decodeResource(context.getResources(),R.drawable.travel)));
+//        chatItemList.setchatList(chatItems);
+//        lsv.setAdapter(chatItemList);
+//        lsv.setSelection(chatItemList.getCount());
         return rootView;
     }
 
@@ -56,11 +58,14 @@ public class TabChat extends Fragment implements AdapterView.OnItemClickListener
     @Override
     public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
 
+        chatItemList = (ChatItemList)lsv.getAdapter();
+        chatItems = chatItemList.getchatList();
         String chatName = ((ChatItem)chatItemList.getItem(i)).getName();
+
         Intent goChatRoom = new Intent( getActivity(), ChatroomActivity.class );
         RoomInfo selectedItem = findSelectedItem(i);
 
-        if(!selectedItem.getIsGroup()){
+        if(!selectedItem.getIsGroup()|| selectedItem.getName().equals("資訊組公告")){
             ByteArrayOutputStream bs = new ByteArrayOutputStream();
             selectedItem.getIcon().compress(Bitmap.CompressFormat.JPEG,100,bs);
             goChatRoom.putExtra("avatar", bs.toByteArray());

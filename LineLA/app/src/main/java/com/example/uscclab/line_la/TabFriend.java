@@ -1,6 +1,7 @@
 package com.example.uscclab.line_la;
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
@@ -27,6 +28,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ExpandableListView;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import org.json.JSONArray;
@@ -72,6 +74,10 @@ public class TabFriend extends Fragment {
     private String userID;
 
     //=/ =====for expandablist=====
+
+    //=====text=====
+    private View chatView;
+    private boolean st = false;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -121,6 +127,10 @@ public class TabFriend extends Fragment {
         //=/ =====for expandablist=====
 
         getProfile();
+
+
+        // ===== test =====
+        chatView = inflater.inflate(R.layout.tab_chat, container, false);
 
         return rootView;
     }
@@ -372,6 +382,27 @@ public class TabFriend extends Fragment {
         for(int i=0; i<4; i++){
             expLsvPeople.collapseGroup(i);
             expLsvPeople.expandGroup(i);
+        }
+
+        // ======= test =======
+        if(!st) {
+            ListView lsv = (ListView) getActivity().findViewById(R.id.lsv);
+            ArrayList<ChatItem> chatItems = new ArrayList<ChatItem>();
+            ChatItemList chatItemList;
+            Context context = chatView.getContext();
+            chatItemList = new ChatItemList(context);
+            int groupCount = listAdapter.getGroupCount();
+            for(int groupPosition = 0; groupPosition < groupCount; groupPosition++) {
+                int childrenCount = listAdapter.getChildrenCount(groupPosition);
+                for(int childPosition = 0; childPosition < childrenCount; childPosition++) {
+                    RoomInfo selectedItem = (RoomInfo) listAdapter.getChild(groupPosition, childPosition);
+                    chatItems.add(new ChatItem(selectedItem.getIsGroup(), "", selectedItem.getName(), "", selectedItem.getIcon()));
+                }
+            }
+            chatItemList.setchatList(chatItems);
+            lsv.setAdapter(chatItemList);
+            lsv.setSelection(chatItemList.getCount());
+            st = !st;
         }
     }
     class ItemData{

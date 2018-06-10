@@ -65,6 +65,10 @@ public class ChatItemList extends BaseAdapter {
         this.chatList = chatList;
     }
 
+    public ArrayList<ChatItem> getchatList() {
+        // TODO Auto-generated method stub
+        return chatList;
+    }
     @Override
     public View getView(final int position, View convertView, ViewGroup parent) {
         final ChatItem ChatItem = (ChatItem)getItem(position);
