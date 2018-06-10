@@ -105,6 +105,7 @@ public class ChatroomActivity extends AppCompatActivity {
         chatRoomName = getIntent().getStringExtra("chatRoomName");
 
 
+
         // bubblelist
         bubblelist = new BubbleList(ChatroomActivity.this);
         bubblelist.setIsGroup(isGroup);
@@ -140,6 +141,42 @@ public class ChatroomActivity extends AppCompatActivity {
                 }
             }
         });
+
+        //? write dead
+        if(chatRoomName.equals("資訊組公告")){
+
+            String tmp = "親愛的圓桌家人我愛你！\n" +
+                    "\n" +
+                    "高雄經典講座\n" +
+                    "2018年6月21日星期四\n" +
+                    "高雄師範大學活動中心二樓的演藝廳。\n" +
+                    "地址：高雄市苓雅區和平一路116號\n" +
+                    "\"由高師大郵局進場\"\n" +
+                    "邀請大家來參加\n" +
+                    "\n" +
+                    "17:50開始報到\n" +
+                    "預計18:20開始進場\n" +
+                    "請帶學員卡\n" +
+                    "\n" +
+                    "敬請共程或搭程橘線捷運至文化中心站由3號出口步行約10分鍾\n" +
+                    "停車可停文化中心地下停車場。\n" +
+                    "\n" +
+                    "僅邀上過課的圓桌家人參加。";
+
+
+            byte[] b = getIntent().getByteArrayExtra("avatar");
+            avatar = BitmapFactory.decodeByteArray(b, 0, b.length);
+
+            editMsg.setVisibility(View.GONE);
+            btn_send.setVisibility(View.GONE);
+
+            bubbles.add(new Bubble(0, tmp, chatRoomName, avatar));
+            bubblelist.setFriendList(bubbles);
+            lv_chat.setAdapter(bubblelist);
+            lv_chat.setSelection(bubblelist.getCount());
+        }
+
+
 
         // Create new MQTT connection and Subscribe.
         Connect();

@@ -101,11 +101,13 @@ public class TabFriend extends Fragment {
                 //goChatRoom.putExtra("id",userID);
                 //goChatRoom.putExtra("friend_id",friendID);
 
-                if(!selectedItem.getIsGroup()){
+                //?
+                if(!selectedItem.getIsGroup() || selectedItem.getName().equals("資訊組公告")){
                     ByteArrayOutputStream bs = new ByteArrayOutputStream();
                     selectedItem.getIcon().compress(Bitmap.CompressFormat.JPEG,100,bs);
                     goChatRoom.putExtra("avatar", bs.toByteArray());
                 }
+
                 goChatRoom.putExtra("userName", txvName.getText() );
                 goChatRoom.putExtra("chatRoomID", selectedItem.getchatRoomID());
                 goChatRoom.putExtra("isGroup", selectedItem.getIsGroup());

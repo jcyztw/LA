@@ -5,6 +5,7 @@ import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -91,6 +92,9 @@ public class BubbleList extends BaseAdapter{
             else{
                 tv_chat_name = (TextView) rowView.findViewById(R.id.tv_chat_name);
                 tv_chat_name.setText(Bubble.getName());
+                //?
+                Log.i("####1", Bubble.getName() + "aaaa");
+                //tv_chat_name.setVisibility(View.GONE);
             }
         }
         // me
